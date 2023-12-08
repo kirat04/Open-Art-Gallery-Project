@@ -1,0 +1,25 @@
+html
+    head 
+        title #{newuser.user.name}
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        h7 this is #{newuser.user.name}'s page
+        
+        br
+        div
+            p Artwork
+            ul 
+                each art in newuser.art 
+                    li 
+                        a(href = '/art/'+ art._id) #{art.title}
+            p Workshops
+            ul 
+                if newuser.workshops.length == 0
+                    h7 No Workshops
+                else
+                    each workshop in newuser.workshops 
+                        li 
+                            a(href = '/workshops/'+ workshop._id) #{workshop.title}
+            input(type="button", value="follow or unfollow", id = "follow")
+    script(src="/userPage.js")

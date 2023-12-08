@@ -1,0 +1,37 @@
+html
+    head 
+        title Notifications
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        p New Art
+        
+        each artNotif in userArtNotif 
+            h7 
+                span
+                    a(href="/user/"+artNotif.artist._id) #{artNotif.artist.name}
+                span  added 
+                span 
+                    a(href="/art/"+artNotif.art._id) #{artNotif.art.title}
+                span  to their collection.
+            br
+        br
+        |
+        br
+        |
+        br
+        p New Workshops
+        each workshopNotif in userWorkshopNotif 
+            h7 
+                span
+                    a(href="/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
+                span  added 
+                span 
+                    a(href="/workshops/"+workshopNotif.workshop._id) #{workshopNotif.workshop.title}
+                span  to their collection.
+            br
+        br
+        |
+        br
+        input(type="button", value="Clear Notifications" id="delNotif")
+        script(src="/viewNotifs.js")

@@ -1,0 +1,23 @@
+html 
+    head 
+        title Login 
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        div.loginpage
+            div.loginmargin.logintitle
+            div.centertext.logincontainer
+                div.createtitlecontainer
+                    h7.createtitle.centertext New Account
+                br
+                label.loginlabel(for="username") Username
+                br
+                input.logininput.createinput(type="text" id = "username")
+                br
+                label.loginlabel(for="password") Password
+                br
+                input.logininput.loginmargin.createinput(type="password" id = "password")
+                br
+                input.logininput.loginbutton(type="button", value="Create Account", id = "createbutton")  
+            div.logincreateuser.centertext
+                a.logincreateuserbutton(href="/login") Login  
+    script(src="/newUser.js") 

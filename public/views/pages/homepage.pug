@@ -1,0 +1,76 @@
+html 
+    head 
+        title homepage 
+        link(rel="stylesheet" href="/styles.css")
+    body.homepagebackground
+        include ../partials/header
+
+        div.homepagelinks
+            br
+            div.homepagelinkcontainer.homepagelinkbackgroundtop
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinktop(href="/artistFollowers") View Artists your following
+            br
+            |
+            br
+            div.homepagelinkcontainer.homepagelinkbackgroundmid
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+            br
+            |
+            br
+            div.homepagelinkcontainer.homepagelinkbackgroundbottom
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your settings
+        div.homepagemain
+            div
+                br
+                |
+                br
+                h7.homepagesearchtitle Explore ArtWorld 
+                br
+                |
+                br
+                input.homepagesearch(type="text", id = "searchtext")
+                br
+                |
+                br
+                input.homepagesearchbutton(type="button", value="Search Artists", id = "searchartists")
+                | 
+                input.homepagesearchbutton(type="button", value="Search Art", id ="searchart")
+                | 
+                input.homepagesearchbutton(type="button", value="Filter Art", id = "filters")
+            br
+            div.hide(id = "filterselection")
+                input(type="number" id = "yearlower" value = "0")
+                label(for="yearlower") Year(Min)
+                br
+                |
+                br
+                input(type="number" id = "yearhigher" value ="2023")
+                label(for="yearhigher") Year(Max)
+                br
+                select(name="categories" id = "categories")
+                    option(value="all") -all- 
+                | 
+                select(name="medium" id = "medium")
+                    option(value="all") -all-
+                br
+                |
+                br
+                input.homepagesearchbutton(type="button", value="Search Art", id = "filteredart")
+
+            br
+            div.homesearchcontainer.hide(id="searchcontainer") 
+                h7.homepagesearchresulttitle Results
+                ul.homepagesearchresults(id = "searchresults")
+                nav 
+                    div(id = "pageNum")
+        div
+            p Your likes/reviews
+            each review in reviews 
+                
+                a(href="/art/"+review.reviewArt.art) #{review.artname}
+                | 
+                input(type="button", value="Remove") 
+    script(src="/homepage.js")

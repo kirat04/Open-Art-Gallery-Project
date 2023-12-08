@@ -1,0 +1,20 @@
+html 
+    head 
+        title Following 
+        link(rel="stylesheet" href="/styles.css")
+    body.homepagebackground 
+        include ../partials/header
+        div
+            div.createtitlecontainer
+                h7.centertext.yourfollowing Your Following:
+                - let type = true;
+                    each follower in user.followerlist
+                        if type
+                            li.artistfollowers.oddlist
+                                a.artistlink(href="/user/"+follower._id) #{follower.name}
+                            -type = false
+                        else
+                            li.artistfollowers.oddlist
+                                a.artistlink(href="/user/"+follower._id) #{follower.name}
+                            -type = true
+

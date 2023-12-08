@@ -1,0 +1,45 @@
+html
+    head 
+        title View Your Art
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        input(type="button", value="Add Art", id = 'addArt')
+        br
+        |
+        br
+        div(id="artsubmit").hide 
+            label(for="title") Title 
+            input(type="text" id ="title" name = "title")
+            br
+            label(for="year") Year 
+            input(type="number" id ="year")
+            br
+            label(for="category") Category 
+            input(type="text" id ="category")
+            br
+            label(for="medium") Medium 
+            input(type="text" id ="medium")
+            br
+            label(for="medium") Description 
+            input(type="text" id ="desc")
+            br
+            label(for="medium") Image (Paste URL) 
+            input(type="text" id ="poster")
+            br
+            input(type="button", value="Submit Art", id = "submit")
+        br
+        div
+            div.homesearchcontainer.hide(id="searchcontainer") 
+                h7.homepagesearchresulttitle Results
+                ul.homepagesearchresults(id = "searchresults")
+                nav 
+                    div(id = "pageNum")
+            div.createtitlecontainer
+                h7.centertext.viewarttitle Your Art:
+                div.viewartcontainer
+                    each art in user.artlist
+                        li.homepagesearchimage
+                            img(src=art.poster, alt="", width = 150, height =150) 
+                            a(href='/art/'+ art._id) #{art.title}
+        script(src="/viewArt.js")

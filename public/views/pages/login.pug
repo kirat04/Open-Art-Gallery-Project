@@ -1,0 +1,23 @@
+html(id = "loginHTML") 
+    head 
+        title Login 
+        link(rel="stylesheet" href="/styles.css")
+    body.loginbackground 
+        div.loginpage
+            div.loginmargin.logintitle
+                h7.loginartworld Art World
+                br
+                h7.loginwelcome View art and connect with artists around the world. 
+            div.centertext.logincontainer
+                label.loginlabel(for="username") Username
+                br
+                input.logininput(type="text" id = "username")
+                br
+                label.loginlabel(for="password") Password
+                br
+                input.logininput.loginmargin(type="password" id = "password")
+                br
+                input.logininput.loginbutton(type="button", value="Log In", id = "loginbutton")
+            div.logincreateuser.centertext
+                a.logincreateuserbutton(href="/newUser") Create User  
+    script(src="/login.js") 

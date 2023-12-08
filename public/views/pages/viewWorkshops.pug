@@ -1,0 +1,26 @@
+html
+    head 
+        title View Your Workshops
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        input(type="button", value="Add Workshop", id = 'addArt')
+        br
+        |
+        br
+        div(id="artsubmit").hide 
+            label(for="title") Title 
+            input(type="text" id ="titleWorkshop" name = "titleWorkshop")
+            br
+            label(for="descWorkshop") Description 
+            input(type="text" id ="descWorkshop")
+            br
+            input(type="button", value="Submit Workshop", id = "submitWorkshop")
+        br
+        div.centertext.logincontainer
+            div.createtitlecontainer
+                h7.centertext.yourfollowing Your Workshops:
+                    each workshop in user.workshopList
+                        li.artistfollowers.oddlist 
+                            a.artistlink(href='/workshops/'+workshop._id) #{workshop.title}
+        script(src="/viewArt.js")

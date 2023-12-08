@@ -1,0 +1,25 @@
+html
+    head 
+        title #{newart.title}
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        img.artdim(src=newart.poster, alt="")
+        p this is #{newart.title}'s page
+        h7 Liked by #{likecounter} users
+        br
+        |
+        br
+        |
+        br
+        div(id="reviews")
+            p Reviews 
+
+            each review in reviews
+                h7 #{review.user} says:
+                br
+                h7 #{review.text}
+                br
+                |
+                br
+        script(src="/review.js")

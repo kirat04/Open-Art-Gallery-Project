@@ -1,0 +1,23 @@
+html
+    head 
+        title #{workshop.title}
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        p this is #{workshop.title}'s page
+
+        if enrolled 
+            input(type="button", value="unenroll", id = "enrollbutton")
+        else
+            input(type="button", value="enroll", id = "enrollbutton")
+
+        - let count = 0
+
+        each d in workshop.enrolled 
+            - count++
+        if count >0
+            p This workshop has #{count} users enrolled
+        else 
+            p This workshop has no users enrolled
+
+        script(src="/workshop.js")

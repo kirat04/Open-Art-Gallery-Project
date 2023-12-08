@@ -1,0 +1,72 @@
+html 
+    head 
+        title homepage 
+        link(rel="stylesheet" href="/styles.css")
+    body.homepagebackground
+        include ../partials/header
+
+        div.homepagelinks
+            div.homepagelinkcontainer.homepagelinkbackgroundtop
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinktop(href="/artistFollowers") View Artists your following
+            
+            div.homepagelinkcontainer.homepagelinkbackgroundmid
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+
+            div.homepagelinkcontainer.homepagelinkbackgroundbottom
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your settings
+            
+            div.homepagelinkcontainer.homepagelinkbackgroundartist
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkbottom(href="/viewArt") View your art
+
+            div.homepagelinkcontainer.homepagelinkbackgroundartist
+                div.homepagelinkcenter
+                    a.homepagelink.homepagelinkmid(href="/viewWorkshops") View your workshops
+        div.homepagemain
+            div
+                br
+                |
+                br
+                h7.homepagesearchtitle Explore ArtWorld 
+                br
+                |
+                br
+                input.homepagesearch(type="text", id = "searchtext")
+                br
+                |
+                br
+                input.homepagesearchbutton(type="button", value="Search Artists", id = "searchartists")
+                | 
+                input.homepagesearchbutton(type="button", value="Search Art", id ="searchart")
+                | 
+                input.homepagesearchbutton(type="button", value="Filter Art", id = "filters")
+            br
+            div.hide(id = "filterselection")
+                input(type="number" id = "yearlower" value = "0")
+                label(for="yearlower") Year(Min)
+                br
+                |
+                br
+                input(type="number" id = "yearhigher" value ="2023")
+                label(for="yearhigher") Year(Max)
+                br
+                select(name="categories" id = "categories")
+                    option(value="all") -all- 
+                | 
+                select(name="medium" id = "medium")
+                    option(value="all") -all-
+                br
+                |
+                br
+                input.homepagesearchbutton(type="button", value="Search Art", id = "filteredart")
+
+            br
+            div.homesearchcontainer.hide(id="searchcontainer") 
+                h7.homepagesearchresulttitle Results
+                ul.homepagesearchresults(id = "searchresults")
+                nav 
+                    div(id = "pageNum")
+    script(src="/homepage.js")

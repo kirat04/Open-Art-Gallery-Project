@@ -1,0 +1,41 @@
+html
+    head 
+        title Settings
+        link(rel="stylesheet" href="/styles.css")
+    body 
+        include ../partials/header
+        p this is #{user.upgrade}'s settings page
+        - var upgrade
+        if user.upgrade == true
+            - upgrade = "Become a Patron"
+        else 
+            - upgrade = "Become an Artist"
+        if hasArt
+            input(type="button", value= upgrade, id = "upgradebutton")
+        else 
+            input(type="button", value= upgrade, id = "upgradebuttonnoart")
+        br
+        |
+        br
+        div(id="artsubmit").hide
+            p You must first add a artwork to become an Artist 
+            label(for="title") Title 
+            input(type="text" id ="title" name = "title")
+            br
+            label(for="year") Year 
+            input(type="number" id ="year")
+            br
+            label(for="category") Category 
+            input(type="text" id ="category")
+            br
+            label(for="medium") Medium 
+            input(type="text" id ="medium")
+            br
+            label(for="medium") Description 
+            input(type="text" id ="desc")
+            br
+            label(for="medium") Image (Paste URL) 
+            input(type="text" id ="poster")
+            br
+            input(type="button", value="Submit Art", id = "submit")
+    script(src="/settings.js")
