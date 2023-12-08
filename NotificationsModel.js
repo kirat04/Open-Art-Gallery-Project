@@ -20,7 +20,11 @@ let notifSchema = Schema({
     },
 	addedWorkshop: {
         type: [Schema.Types.ObjectId]
-    }
+    },
+	viewed:{
+		type: Boolean,
+		default: false
+	}
 });
 
 //Instance method finds purchases of this user

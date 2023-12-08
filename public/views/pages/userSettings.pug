@@ -2,7 +2,7 @@ html
     head 
         title Settings
         link(rel="stylesheet" href="/styles.css")
-    body 
+    body.homepagebackground 
         include ../partials/header
         p this is #{user.upgrade}'s settings page
         - var upgrade
@@ -38,4 +38,25 @@ html
             input(type="text" id ="poster")
             br
             input(type="button", value="Submit Art", id = "submit")
+        div
+            p Art you have liked
+            each review in reviews 
+                if review.reviewArt.liked
+                    a(href="/art/"+review.reviewArt.art) #{review.artname}
+                    | 
+                    form(action="/unlike/" +review.reviewArt.art, method="post") 
+                        input(type="submit", value="Remove Like")
+                    br
+                    |
+                    br
+            p Art you have reviewed 
+            each review in reviews 
+                if review.reviewArt.reviewText && review.reviewArt.reviewText != ""
+                    a(href="/art/"+review.reviewArt.art) #{review.artname}
+                    | 
+                    form(action="/unreview/" +review.reviewArt.art, method="post") 
+                        input(type="submit", value="Remove Like")
+                    br
+                    |
+                    br  
     script(src="/settings.js")

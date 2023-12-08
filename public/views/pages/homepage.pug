@@ -66,11 +66,5 @@ html
                 ul.homepagesearchresults(id = "searchresults")
                 nav 
                     div(id = "pageNum")
-        div
-            p Your likes/reviews
-            each review in reviews 
-                
-                a(href="/art/"+review.reviewArt.art) #{review.artname}
-                | 
-                input(type="button", value="Remove") 
+
     script(src="/homepage.js")

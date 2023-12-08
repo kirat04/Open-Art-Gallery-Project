@@ -2,7 +2,7 @@ html
     head 
         title #{newart.title}
         link(rel="stylesheet" href="/styles.css")
-    body 
+    body.homepagebackground
         include ../partials/header
         img.artdim(src=newart.poster, alt="")
         p this is #{newart.title}'s page
@@ -21,16 +21,17 @@ html
         else
             input(type="button" value = "Leave a review" id="leaveReview")
         div.hide(id="reviewContainer")
-            textarea(name="", cols="30", rows="10") 
+            textarea(name="", cols="30", rows="10", id = "reviewdata") 
             input(type="button", value="Submit Review" id="submitreview")
         div(id="reviews")
             p Reviews 
 
             each review in reviews
-                h7 #{review.user} says:
-                br
-                h7 #{review.text}
-                br
-                |
-                br
+                if review.text && review.text != ""
+                    h7 #{review.user} says:
+                    br
+                    h7 #{review.text}
+                    br
+                    |
+                    br
         script(src="/review.js")

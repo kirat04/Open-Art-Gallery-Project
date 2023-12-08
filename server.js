@@ -422,6 +422,7 @@ else res.redirect("/login");
                 
                 loggedin = {name: name};
                 res.render('userNotif', {user:loggedin,userArtNotif: notificationsArt, userWorkshopNotif: notificationsWorkshops});
+            
             }
             else{
                 loggedin = {name: name};
@@ -453,26 +454,36 @@ else res.redirect("/login");
 app.get('/userSettings', async (req,res) => {
     if(req.session.userID){
         let loggedin;
-        let name;
-        let followerList = [];
-        let hasArt = false;
+        
  await User.findById(req.session.userID)
  .then(async result =>{
-            
-                loggedin = result;
+    let reviewed = [];
+    await Review.find({"user":result._id})
+     .then(async reviews =>{
+         console.log(reviews);
 
-            if(result.art.length == 0)
-            hasArt = true;
-        else
-        hasArt = false;
-        })
-        .catch(err => {
-			console.log(err);
-			res.status(500).send("No session found");
-		});
+         for(let i = 0 ; i<reviews.length;i++){
+             
+           await  Art.findById(reviews[i].art)
+             .then(art =>{
+                 let reviewBundle = {artname:art.title,reviewArt:reviews[i]};
+                 reviewed.push(reviewBundle);
 
-        res.render('userSettings', {user: loggedin, hasArt:hasArt});
+             })
+         }
+         
+     })
 
+     console.log(reviewed);
+     loggedin = {name: result.name, upgrade: result.upgrade};
+
+ res.render('userSettings', {user: loggedin,reviews:reviewed});
+     
+ })
+ .catch(err => {
+     console.log(err);
+     res.status(500).send("No session found");
+ });
     }
 else res.redirect("/login");
     } )
@@ -485,6 +496,8 @@ else res.redirect("/login");
             console.log("upgrade");
             await User.findById(req.session.userID)
             .then(async result =>{
+
+                
                 console.log(req.body);
                 if(req.body.newArt){
           await  Art.findOne({"title":req.body.newArt.title})
@@ -742,18 +755,24 @@ app.get('/art/:artID',(req,res) => {
             name = {name:owners.name};
            await Art.findById(req.params.artID)
             .then(async result =>{
-                console.log(result.artist);
-                console.log(owners._id.toString());
+                // console.log(result.artist);
+                // console.log(owners._id.toString());
                 if(result.artist.toString() == req.session.userID.toString())
                 owner = true;
 
                 
-              await  Review.findOne({"user":req.session.userID})
-                .then(async review =>{
-                    
-                        if(review){
-                            liked = review.liked;
+              await  Review.find({"user":req.session.userID})
+                .then(async reviews =>{
+                        let temp = [];
+                        // console.log(reviews);
+                        for(let i =0; i < reviews.length;i++){
+                            temp.push(reviews[i].art.toString());
+                            console.log(reviews[i].art.toString());
                         }
+                       
+                        console.log(result._id.toString());
+                        if(temp.includes(result._id.toString()))                       
+                            liked = reviews[temp.indexOf(result._id.toString())].liked;
                         else
                         liked = false;
                 })
@@ -766,14 +785,14 @@ app.get('/art/:artID',(req,res) => {
                                 likecounter++;
                                 
                                 let reviewBundle = {user:null, text:null};
-                                console.log(reviewdatas[i].user)
+                                // console.log(reviewdatas[i].user)
                                await User.findById(reviewdatas[i].user)
                                 .then(async use =>{
                                         reviewBundle.user = use.name;
                                 })
 
                                 reviewBundle.text = reviewdatas[i].reviewText;
-                                console.log(reviewBundle);
+                                // console.log(reviewBundle);
                                 if(reviewBundle.text != null){
                                 reviews.push(reviewBundle);
                                 reviewed = true;
@@ -784,7 +803,7 @@ app.get('/art/:artID',(req,res) => {
                         }
 
                 })
-                console.log(owner);
+                // console.log(owner);
                 if(owner)
                 res.render('ownart' ,{newart:result, user:name, liked:liked, reviews:reviews, likecounter:likecounter, reviewed:reviewed});
                 else
@@ -1036,53 +1055,79 @@ app.put('/like/:artID',(req,res) => {
         .then( result =>{
             
             name = {name:result.name};
-            Review.find({"user":req.session.userID})
+            Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
-                console.log();
-                if(review.length == 0){
+                console.log(review);
+                if(!review){
                     let rev = new Review;
                     rev.user = req.session.userID;
                     rev.art = id;
                     rev.liked = true;
                     rev.reviewText = null;
                     rev.save();
-
                 }
+
                 else{
-                    let reviewedID = [];
-                    for(let i = 0; i<review.length;i++){
-                        reviewedID.push(review[i]._id.toString());
-                    }
-                    console.log(reviewedID);
-                    for(let i = 0; i<review.length;i++){
-                       await Review.findOne({"art":id})
-                        .then(art =>{
-                            console.log(reviewedID.includes(art._id.toString()));
+                    if(review.liked)
+                    review.liked = false;
+                else
+                review.liked = true;
 
-                            if(reviewedID.includes(art._id.toString())){
-                                if(review[i].liked)
-                                review[i].liked = false;
-                                else
-                                review[i].liked = true;
-                                review[i].save();
-                                console.log("saved");
-                            }
-                            else
-                            {
-                                let rev = new Review;
-                                rev.user = req.session.userID;
-                                rev.art = id;
-                                rev.liked = true;
-                                rev.reviewText = null;
-                                rev.save();
-                                console.log("kill me");
-                            }
-                        })
-                    }
-
-               
+               review.save();
+               console.log("saved");
                 }
                 res.sendStatus(200);
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send("Art Does Not Exist");
+            });         
+        })
+        .catch(err => {
+			console.log(err);
+			res.status(500).send("No session found");
+		});
+    }
+
+}
+else res.redirect('/login');
+} 
+)
+
+//UNLIKE A ART
+app.post('/unlike/:artID',(req,res) => {
+    if(req.session.userID){
+    User.findById(req.session.userID)
+    let id = req.params.artID;
+    console.log(id);
+    if(req.session.userID){
+        let name;
+        User.findById(req.session.userID)
+        .then( result =>{
+            
+            name = {name:result.name};
+            Review.findOne({"user":req.session.userID, "art":id})
+            .then(async review =>{
+                console.log(review);
+                if(!review){
+                    let rev = new Review;
+                    rev.user = req.session.userID;
+                    rev.art = id;
+                    rev.liked = true;
+                    rev.reviewText = null;
+                    rev.save();
+                }
+
+                else{
+                    if(review.liked)
+                    review.liked = false;
+                else
+                review.liked = true;
+
+               review.save();
+               console.log("saved");
+                }
+                res.sendStatus(204);
             })
             .catch(err => {
                 console.log(err);
@@ -1102,6 +1147,56 @@ else res.redirect('/login');
 //Review an Art-------------------
 app.put('/review/:artID',(req,res) => {
     if(req.session.userID){
+        User.findById(req.session.userID)
+        let id = req.params.artID;
+        console.log(id);
+        if(req.session.userID){
+            let name;
+            User.findById(req.session.userID)
+            .then( result =>{
+                
+                name = {name:result.name};
+                Review.findOne({"user":req.session.userID, "art":id})
+                .then(async review =>{
+                    console.log(review);
+                    if(!review){
+                        let rev = new Review;
+                        rev.user = req.session.userID;
+                        rev.art = id;
+                        rev.liked = false;
+                        rev.reviewText = req.body.text;
+                        rev.save();
+                    }
+    
+                    else{
+                        
+                    review.reviewText = req.body.text;
+    
+                   review.save();
+                   console.log("saved");
+                    }
+                   
+                    
+                    res.sendStatus(200);
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send("Art Does Not Exist");
+                });         
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).send("No session found");
+            });
+        }
+    
+    }
+    else res.redirect('/login');
+} 
+)
+//unreview art
+app.post('/unreview/:artID',(req,res) => {
+    if(req.session.userID){
     User.findById(req.session.userID)
     let id = req.params.artID;
     console.log(id);
@@ -1111,22 +1206,11 @@ app.put('/review/:artID',(req,res) => {
         .then( result =>{
             
             name = {name:result.name};
-            Review.findOne({"user":req.session.userID})
-            .then(review =>{
-                if(!review){
-                    let rev = new Review;
-                    rev.user = req.session.userID;
-                    rev.art = id;
-                    rev.liked = false;
-                    rev.reviewText = req.body.text;
-                    rev.save();
-
-                }
-                else{
-                review.reviewText = req.body.text;
+            Review.findOne({"user":req.session.userID, "art":id})
+            .then(async review =>{
+                review.reviewText = "";
                 review.save();
-                }
-                res.sendStatus(200);
+                res.sendStatus(204);
             })
             .catch(err => {
                 console.log(err);
