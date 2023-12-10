@@ -9,17 +9,14 @@ let notifSchema = Schema({
 		type: Schema.Types.ObjectId, 
 		
 	},
-    addedArtArtist:{
-        type: [Schema.Types.ObjectId]
+    artist:{
+        type: Schema.Types.ObjectId
     },
 	addedArt: {
-        type: [Schema.Types.ObjectId]
-    },
-	addedWorkshopArtist: {
-        type: [Schema.Types.ObjectId]
+        type: Schema.Types.ObjectId
     },
 	addedWorkshop: {
-        type: [Schema.Types.ObjectId]
+        type: Schema.Types.ObjectId
     },
 	viewed:{
 		type: Boolean,

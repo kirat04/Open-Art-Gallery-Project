@@ -7,14 +7,13 @@ html
         div
             div.createtitlecontainer
                 h7.centertext.yourfollowing Your Following:
-                - let type = true;
-                    each follower in user.followerlist
-                        if type
-                            li.artistfollowers.oddlist
-                                a.artistlink(href="/user/"+follower._id) #{follower.name}
-                            -type = false
-                        else
-                            li.artistfollowers.oddlist
-                                a.artistlink(href="/user/"+follower._id) #{follower.name}
-                            -type = true
+                br
+                |
+                br
+        div.followerdiv
+            - let type = true;
+                each follower in user.followerlist
+                    li.artistfollowers.oddlist.highlight
+                        a.artistlink(href="/user/"+follower._id) #{follower.name}
+
 

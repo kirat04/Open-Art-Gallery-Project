@@ -21,7 +21,7 @@ html
             br
             div.homepagelinkcontainer.homepagelinkbackgroundbottom
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your settings
+                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your Profile
         div.homepagemain
             div
                 br
@@ -51,10 +51,10 @@ html
                 label(for="yearhigher") Year(Max)
                 br
                 select(name="categories" id = "categories")
-                    option(value="all") -all- 
+                    option(value="all") -all categories- 
                 | 
                 select(name="medium" id = "medium")
-                    option(value="all") -all-
+                    option(value="all") -all mediums-
                 br
                 |
                 br
@@ -64,7 +64,7 @@ html
             div.homesearchcontainer.hide(id="searchcontainer") 
                 h7.homepagesearchresulttitle Results
                 ul.homepagesearchresults(id = "searchresults")
-                nav 
-                    div(id = "pageNum")
+            nav 
+                div(id = "pageNum")
 
     script(src="/homepage.js")

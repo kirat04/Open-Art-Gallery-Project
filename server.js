@@ -221,33 +221,26 @@ app.get('/logout',(req,res) => {
 app.get('/homepage',(req,res) => {
     if(req.session.userID){
         let loggedin;
-        let liked= [];
-let reviewed= [];
-
+        let viewnotif = {"value":false};
 User.findById(req.session.userID)
         .then(async result =>{
-           await Review.find({"user":result._id})
-            .then(async reviews =>{
-                console.log(reviews);
+            
 
-                for(let i = 0 ; i<reviews.length;i++){
-                    
-                  await  Art.findById(reviews[i].art)
-                    .then(art =>{
-                        reviewBundle = {artname:art.title,reviewArt:reviews[i]};
-                        reviewed.push(reviewBundle);
+           await Notifications.findOne({"user":result._id,"viewed":"false"})
+                .then(notif =>{
+                    if(notif)
+                    viewnotif.value = true;
+                else
+                viewnotif.value = false;
 
-                    })
-                }
-                
-            })
-
-            console.log(reviewed);
+                console.log(viewnotif.value);
+                })
+            
             loggedin = {name: result.name};
             if(result.upgrade)
-            res.render('artistHomepage', {user: loggedin});
+            res.render('artistHomepage', {user: loggedin,newNotif:viewnotif});
         else
-        res.render('homepage', {user: loggedin,reviews:reviewed});
+        res.render('homepage', {user: loggedin,newNotif:viewnotif});
             
         })
         .catch(err => {
@@ -380,43 +373,49 @@ else res.redirect("/login");
             .then(async result =>{
                 name = result.name;
             })
-     await Notifications.findOne({"user":req.session.userID})
+     await Notifications.find({"user":req.session.userID})
      .then(async result =>{
-                
-                if(result){
-                for(let i = 0; i< result.addedArt.length;i++){
-                    let newArtBundle = {"artist":null, "art":null};
-                   await User.findById(result.addedArtArtist[i])
+    
+                if(result.length != 0){
+                for(let i = 0; i< result.length;i++){
+                    let newArtBundle = {"artist":null, "art":null, "viewed":false};
+                    if(result[i].addedArt){
+                   await User.findById(result[i].artist)
                         .then(async artist =>{
                             // console.log(result);
                             newArtBundle["artist"] = artist;
                             // console.log(newArtBundle);
-                          await  Art.findById(result.addedArt[i])
+                          await  Art.findById(result[i].addedArt)
                             .then(async art =>{
                                 newArtBundle["art"] = art;
                             })
                         })
-
+                        newArtBundle["viewed"] = result[i].viewed;
                         notificationsArt.push(newArtBundle);
-                        
+                        result[i].viewed = true;
+                        result[i].save();
+                    }
                 }
 
-                for(let i = 0; i< result.addedWorkshop.length;i++){
-                    let newWorkshopBundle = {"artist":null, "workshop":null};
-                   await User.findById(result.addedWorkshopArtist[i])
+                for(let i = 0; i< result.length;i++){
+                    let newWorkshopBundle = {"artist":null, "workshop":null, "viewed":false};
+                    if(result[i].addedWorkshop){
+                   await User.findById(result[i].artist)
                         .then(async artist =>{
                             // console.log(result);
                             newWorkshopBundle["artist"] = artist;
                             // console.log(newArtBundle);
-                          await  Workshop.findById(result.addedWorkshop[i])
+                          await  Workshop.findById(result[i].addedWorkshop)
                             .then(async workshop =>{
-                                console.log(workshop);
+                                // console.log(workshop);
                                 newWorkshopBundle["workshop"] = workshop;
                             })
                         })
-
+                        newWorkshopBundle["viewed"] = result[i].viewed;
                         notificationsWorkshops.push(newWorkshopBundle);
-                        
+                        result[i].viewed = true;
+                        result[i].save();
+                    }
                 }
 
                 
@@ -442,7 +441,7 @@ else res.redirect("/login");
 
         app.put('/notif', async (req,res) => {
             if(req.session.userID){
-                Notifications.deleteOne({"user":req.session.userID}).then( result =>{
+                Notifications.deleteMany({"user":req.session.userID}).then( result =>{
                     res.sendStatus(200);
                 })
                    
@@ -934,22 +933,13 @@ app.post('/addArt',(req,res) => {
                             console.log(followers);
 
                             for(let i = 0; i<followers.length;i++)
-                         await Notifications.findOne({"user":followers[i]})
-                                .then(notified =>{
-                                    if(notified){
-                                        console.log(notified);
-                                    notified.addedArtArtist.push(req.session.userID);
-                                    notified.addedArt.push(newArt);
-                                    notified.save();
-                                    }
-                                    else{
-                                        let newNotif = new Notifications;
-                                        newNotif.user = followers[i];
-                                        newNotif.addedArtArtist.push(req.session.userID);
-                                        newNotif.addedArt.push(newArt);
-                                        newNotif.save();
-                                    }
-                                })
+                            {
+                                let notif = new Notifications;
+                                notif. user = followers[i];
+                                notif.artist = req.session.userID;
+                                notif.addedArt = newArt._id;
+                                notif.save();
+                            }
                             
                         })
                     res.sendStatus(200);
@@ -1005,22 +995,14 @@ app.post('/addWorkshop',(req,res) => {
                             console.log(followers);
 
                             for(let i = 0; i<followers.length;i++)
-                         await Notifications.findOne({"user":followers[i]})
-                                .then(notified =>{
-                                    if(notified){
-                                        console.log(notified);
-                                    notified.addedWorkshopArtist.push(req.session.userID);
-                                    notified.addedWorkshop.push(newWorkshop);
-                                    notified.save();
-                                    }
-                                    else{
-                                        let newNotif = new Notifications;
-                                        newNotif.user = followers[i];
-                                        newNotif.addedWorkshopArtist.push(req.session.userID);
-                                        newNotif.addedWorkshop.push(newWorkshop);
-                                        newNotif.save();
-                                    }
-                                })
+                            {
+                                let notif = new Notifications;
+                                notif. user = followers[i];
+                                notif.artist = req.session.userID;
+                                notif.addedWorkshop = newWorkshop._id;
+                                notif.save();
+                            }
+                            
                             
                         })
                 }

@@ -44,7 +44,8 @@ searchArtists.onclick = (event)=>{
         if (this.readyState == 4 && this.status == 200) {
             
             let container = document.getElementById('searchcontainer');
-            
+            container.classList.remove("homesearchcontainerart");
+            container.classList.add("homesearchcontainer");
             
             let list = document.getElementById('searchresults')
             list.innerHTML = '';
@@ -57,6 +58,8 @@ searchArtists.onclick = (event)=>{
                 resultLink.innerText = incomingResults[i].name;
                 newResult.classList.add("artistfollowers");
                 newResult.classList.add("oddlist");
+                newResult.classList.add("highlight");
+                resultLink.classList.add("artistlink");
                 newResult.appendChild(resultLink);
 
                 list.appendChild(newResult);
@@ -111,7 +114,8 @@ searchArt.onclick = (event)=>{
         if (this.readyState == 4 && this.status == 200) {
             
             let container = document.getElementById('searchcontainer');
-            
+            container.classList.remove("homesearchcontainer");
+            container.classList.add("homesearchcontainerart");
             
             let list = document.getElementById('searchresults')
             list.innerHTML = '';
@@ -124,8 +128,8 @@ searchArt.onclick = (event)=>{
                 resultLink.innerText = incomingResults[i].title;
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
-                image.width = 150;
-                image.height = 150;
+                image.width = 200;
+                image.height = 200;
                 newResult.appendChild(image);
                 newResult.appendChild(document.createElement('br'));
                 newResult.appendChild(document.createElement('br'));
@@ -204,6 +208,8 @@ searchFilteredArt.onclick = (event)=>{
         if (this.readyState == 4 && this.status == 200) {
             
             let container = document.getElementById('searchcontainer');
+            container.classList.remove("homesearchcontainer");
+            container.classList.add("homesearchcontainerart");
             
             
             let list = document.getElementById('searchresults')
@@ -217,8 +223,8 @@ searchFilteredArt.onclick = (event)=>{
                 resultLink.innerText = incomingResults[i].title;
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
-                image.width = 150;
-                image.height = 150;
+                image.width = 200;
+                image.height = 200;
                 newResult.appendChild(image);
                 newResult.appendChild(document.createElement('br'));
                 newResult.appendChild(document.createElement('br'));

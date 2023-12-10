@@ -4,59 +4,60 @@ html
         link(rel="stylesheet" href="/styles.css")
     body.homepagebackground 
         include ../partials/header
-        p this is #{user.upgrade}'s settings page
+        div.notifcenter
+            
+            div(id="artsubmit").hide
+                p You must first add a artwork to become an Artist 
+                label(for="title") Title 
+                input(type="text" id ="title" name = "title")
+                br
+                label(for="year") Year 
+                input(type="number" id ="year")
+                br
+                label(for="category") Category 
+                input(type="text" id ="category")
+                br
+                label(for="medium") Medium 
+                input(type="text" id ="medium")
+                br
+                label(for="medium") Description 
+                input(type="text" id ="desc")
+                br
+                label(for="medium") Image (Paste URL) 
+                input(type="text" id ="poster")
+                br
+                input(type="button", value="Submit Art", id = "submit")
+            div
+                p.notifTitle Art you have liked
+                each review in reviews 
+                    if review.reviewArt.liked
+                        a(href="/art/"+review.reviewArt.art) #{review.artname}
+                        | 
+                        form(action="/unlike/" +review.reviewArt.art, method="post") 
+                            input(type="submit", value="Remove Like")
+                        br
+                        |
+                        br
+                p.notifTitle Art you have reviewed 
+                each review in reviews 
+                    if review.reviewArt.reviewText && review.reviewArt.reviewText != ""
+                        a(href="/art/"+review.reviewArt.art) #{review.artname}
+                        | 
+                        form(action="/unreview/" +review.reviewArt.art, method="post") 
+                            input(type="submit", value="Remove Like")
+                        br
+                        |
+                        br  
         - var upgrade
-        if user.upgrade == true
-            - upgrade = "Become a Patron"
-        else 
-            - upgrade = "Become an Artist"
-        if hasArt
-            input(type="button", value= upgrade, id = "upgradebutton")
-        else 
-            input(type="button", value= upgrade, id = "upgradebuttonnoart")
-        br
-        |
-        br
-        div(id="artsubmit").hide
-            p You must first add a artwork to become an Artist 
-            label(for="title") Title 
-            input(type="text" id ="title" name = "title")
+            if user.upgrade == true
+                - upgrade = "Become a Patron"
+            else 
+                - upgrade = "Become an Artist"
+            if hasArt
+                input(type="button", value= upgrade, id = "upgradebutton")
+            else 
+                input(type="button", value= upgrade, id = "upgradebuttonnoart")
             br
-            label(for="year") Year 
-            input(type="number" id ="year")
+            |
             br
-            label(for="category") Category 
-            input(type="text" id ="category")
-            br
-            label(for="medium") Medium 
-            input(type="text" id ="medium")
-            br
-            label(for="medium") Description 
-            input(type="text" id ="desc")
-            br
-            label(for="medium") Image (Paste URL) 
-            input(type="text" id ="poster")
-            br
-            input(type="button", value="Submit Art", id = "submit")
-        div
-            p Art you have liked
-            each review in reviews 
-                if review.reviewArt.liked
-                    a(href="/art/"+review.reviewArt.art) #{review.artname}
-                    | 
-                    form(action="/unlike/" +review.reviewArt.art, method="post") 
-                        input(type="submit", value="Remove Like")
-                    br
-                    |
-                    br
-            p Art you have reviewed 
-            each review in reviews 
-                if review.reviewArt.reviewText && review.reviewArt.reviewText != ""
-                    a(href="/art/"+review.reviewArt.art) #{review.artname}
-                    | 
-                    form(action="/unreview/" +review.reviewArt.art, method="post") 
-                        input(type="submit", value="Remove Like")
-                    br
-                    |
-                    br  
     script(src="/settings.js")

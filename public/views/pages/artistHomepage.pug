@@ -10,13 +10,19 @@ html
                 div.homepagelinkcenter
                     a.homepagelink.homepagelinktop(href="/artistFollowers") View Artists your following
             
-            div.homepagelinkcontainer.homepagelinkbackgroundmid
-                div.homepagelinkcenter
-                    a.homepagelink.homepagelinkmid(href="/notif") View your notifications
-
+            if newNotif.value
+                div.homepagelinkcontainer.homepagelinkbackgroundmid
+                    div.homepagelinkcenter
+                        a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+                            img.newNotif(src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46430/exclamation-mark-emoji-clipart-md.png", alt="", width= 40, height= 40)
+            else 
+                div.homepagelinkcontainer.homepagelinkbackgroundmid
+                    div.homepagelinkcenter
+                        a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+            
             div.homepagelinkcontainer.homepagelinkbackgroundbottom
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your settings
+                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your Profile
             
             div.homepagelinkcontainer.homepagelinkbackgroundartist
                 div.homepagelinkcenter
@@ -54,10 +60,10 @@ html
                 label(for="yearhigher") Year(Max)
                 br
                 select(name="categories" id = "categories")
-                    option(value="all") -all- 
+                    option(value="all") -all categories- 
                 | 
                 select(name="medium" id = "medium")
-                    option(value="all") -all-
+                    option(value="all") -all mediums-
                 br
                 |
                 br
@@ -67,6 +73,6 @@ html
             div.homesearchcontainer.hide(id="searchcontainer") 
                 h7.homepagesearchresulttitle Results
                 ul.homepagesearchresults(id = "searchresults")
-                nav 
-                    div(id = "pageNum")
+            nav 
+                div(id = "pageNum")
     script(src="/homepage.js")
