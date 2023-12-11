@@ -2,24 +2,40 @@ html
     head 
         title #{newart.title}
         link(rel="stylesheet" href="/styles.css")
-    body.homepagebackground 
+    body.homepagebackground
         include ../partials/header
         img.artdim(src=newart.poster, alt="")
-        p this is #{newart.title}'s page
-        h7 Liked by #{likecounter} users
-        br
-        |
-        br
-        |
-        br
-        div(id="reviews")
-            p Reviews 
+        div.artcenter
+            br
+            h7 Title: #{newart.title}
+                span.likeart 
+                    h7 Liked by #{likecounter} users
+
+            br  
+            h7 Year: #{newart.year}
+            br 
+            h7  Artist:
+                span 
+                    a(href="/user/"+artist.url) #{artist.name}
+            br
+            h7 Category: #{newart.category}
+            |  
+            h7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Medium: #{newart.medium}
+            div.artdesc
+                p.notiftitle Description:
+                p #{newart.description}
+        div.likeart
+
+       
+        div.showreviews(id="reviews")
+            p.notiftitle Reviews 
 
             each review in reviews
-                h7 #{review.user} says:
-                br
-                h7 #{review.text}
-                br
-                |
-                br
+                if review.text && review.text != ""
+                    h7.bold #{review.user} says:
+                    br
+                    h7 #{review.text}
+                    br
+                    |
+                    br
         script(src="/review.js")

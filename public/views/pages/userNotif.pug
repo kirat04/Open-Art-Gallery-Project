@@ -9,21 +9,21 @@ html
             
             each artNotif in userArtNotif
                 if artNotif.viewed 
-                    h7 
+                    h7.newnotif 
                         span
                             a(href="/user/"+artNotif.artist._id) #{artNotif.artist.name}
                         span  added 
                         span 
                             a(href="/art/"+artNotif.art._id) #{artNotif.art.title}
-                        span  to their collection.
+                        span  to their art collection.
                 else
-                    h7.bold 
+                    h7.bold.newnotif 
                         span
                             a(href="/user/"+artNotif.artist._id) #{artNotif.artist.name}
                         span  added 
                         span 
                             a(href="/art/"+artNotif.art._id) #{artNotif.art.title}
-                        span  to their collection.
+                        span  to their art collection.
                 br
             br
             |
@@ -33,24 +33,24 @@ html
             p.notifTitle New Workshops
             each workshopNotif in userWorkshopNotif 
                 if workshopNotif.viewed
-                    h7 
+                    h7.newnotif 
                         span
                             a(href="/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
                         span  added 
                         span 
                             a(href="/workshops/"+workshopNotif.workshop._id) #{workshopNotif.workshop.title}
-                        span  to their collection.
+                        span  to their workshop collection.
                 else 
-                    h7.bold 
+                    h7.bold.newnotif 
                         span
                             a(href="/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
                         span  added 
                         span 
                             a(href="/workshops/"+workshopNotif.workshop._id) #{workshopNotif.workshop.title}
-                        span  to their collection.
+                        span  to their workshop collection.
                 br
             br
             |
             br
-            input(type="button", value="Clear Notifications" id="delNotif")
+            input.clearnotif.clickcursor.highlight(type="button", value="Clear Notifications" id="delNotif")
         script(src="/viewNotifs.js")

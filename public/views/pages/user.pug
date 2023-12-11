@@ -4,22 +4,27 @@ html
         link(rel="stylesheet" href="/styles.css")
     body.homepagebackground
         include ../partials/header
-        h7 this is #{newuser.user.name}'s page
-        
-        br
-        div
-            p Artwork
-            ul 
-                each art in newuser.art 
-                    li 
-                        a(href = '/art/'+ art._id) #{art.title}
-            p Workshops
-            ul 
-                if newuser.workshops.length == 0
-                    h7 No Workshops
-                else
-                    each workshop in newuser.workshops 
-                        li 
-                            a(href = '/workshops/'+ workshop._id) #{workshop.title}
-            input(type="button", value="follow or unfollow", id = "follow")
+        div.centertext
+            h7.notiftitle This is #{newuser.user.name}'s page
+            
+            br
+            if follows
+                input.highlight.clickcursor(type="button", value="Unfollow", id = "follow")
+            else 
+                input.highlight.clickcursor(type="button", value="Follow", id = "follow")
+            div
+                p.usertitles Artwork
+                ul 
+                    each art in newuser.art 
+                        li.rmvbullet 
+                            a(href = '/art/'+ art._id) #{art.title}
+                p.usertitles Workshops
+                ul 
+                    if newuser.workshops.length == 0
+                        h7 No Workshops
+                    else
+                        each workshop in newuser.workshops 
+                            li.rmvbullet 
+                                a(href = '/workshops/'+ workshop._id) #{workshop.title}
+            
     script(src="/userPage.js")

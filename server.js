@@ -154,6 +154,7 @@ app.get('/newUser', (req,res) => {
 
 })
 app.post('/user',(req,res) => {
+    //create a user with the provided credentials if the name is unique
     console.log(req.body);
     User.findOne({name: req.body.user})
     .then(result =>{
@@ -187,30 +188,34 @@ app.get('/login',(req,res) => {
     
 } )
 app.post('/login',(req,res) => {
-    console.log(req.body.user);
-
+    //find a user with the same name
     User.findOne({name: req.body.user})
         .then(result =>{
+            //if theres no one with the same username send 400
             if (!result) {
 				console.log("User name " + result + " does not exist.");
-				return;
+				res.sendStatus(400);
+                return;
 			}
             
             console.log("Result:");
 			console.log(result.password);
+            //if a username is found, check password, if it matches create a session
             if(req.body.pass == result.password){
                 req.session.userID = result._id;
             console.log(req.session.userID);
             req.session.save();
+            res.redirect('/homepage');
             }
+            
         })
-    res.redirect('/homepage');
+   
 
 } )
 
 //USER LOGOUT----------------------------------
 app.get('/logout',(req,res) => {
-    //render the login page with the login pug
+    //destroy the session to logout
     req.session.destroy(function(){
         console.log("user logged out.")
      });
@@ -219,9 +224,11 @@ app.get('/logout',(req,res) => {
 //USER HOMEPAGE------------------------------------
 
 app.get('/homepage',(req,res) => {
+    //check session
     if(req.session.userID){
         let loggedin;
         let viewnotif = {"value":false};
+        //find the user that in current session and retrieve notification status
 User.findById(req.session.userID)
         .then(async result =>{
             
@@ -254,7 +261,7 @@ else res.redirect("/login");
 
 app.post('/homepage/search/artists',(req,res) => {
     console.log(req.body.search);
-
+    //search for artists by name
     User.find({ "name" : { $regex: new RegExp("^"+req.body.search+".*$"), $options: 'i' } })
     .then(result =>{
         res.status(200).send(JSON.stringify(result));
@@ -266,7 +273,7 @@ app.post('/homepage/search/artists',(req,res) => {
 app.post('/homepage/search/art',(req,res) => {
     console.log(req.body.maxYear);
 
-
+    //search for art by just art title
     Art.find({ "title" : { $regex: new RegExp("^"+req.body.search+".*$"), $options: 'i' } })
     .then(result =>{
         res.status(200).send(JSON.stringify(result));
@@ -275,10 +282,10 @@ app.post('/homepage/search/art',(req,res) => {
    
 } )
 
-app.get('/homepage/search/art',(req,res) => {
+app.get('/homepage/search/art',async (req,res) => {
     console.log(req.query.search);
     console.log(req.query.category);
-
+    //use multiple filters to filter the art before sending results
     let category;
     let medium;
 
@@ -291,20 +298,48 @@ if(req.query.medium == "all")
 medium = "";
 else
 medium = req.query.medium;
-
+let array = [];
+    if(req.query.artist && req.query.artist != "")
+    User.find({ "name" : { $regex: new RegExp("^"+req.query.artist+".*$"), $options: 'i' } })
+        .then(async artists =>{
+            // console.log(artists);
+            for(let i = 0; i< artists.length;i++){
+              await  Art.find({ "title" : { $regex: new RegExp("^"+req.query.search+".*$"), $options: 'i' } ,
+                "year": {$lte: req.query.maxYear, $gte:req.query.minYear},
+                "category":{ $regex: new RegExp("^"+category+".*$"), $options: 'i' },
+                "medium":{ $regex: new RegExp("^"+medium+".*$"), $options: 'i' },
+                "artist":artists[i]._id
+               })
+               .then(result =>{
+                    // console.log(result);
+                    for(let j = 0; j<result.length;j++){
+                        array.push(result[j]);
+                    }
+                    
+                   
+                   
+               })
+            }
+            console.log(array);
+            res.status(200).send(JSON.stringify(array));
+        })
+    else
     Art.find({ "title" : { $regex: new RegExp("^"+req.query.search+".*$"), $options: 'i' } ,
-     "year": {$lte: req.query.maxYear, $gte:req.query.minYear},
-     "category":{ $regex: new RegExp("^"+category+".*$"), $options: 'i' },
-     "medium":{ $regex: new RegExp("^"+medium+".*$"), $options: 'i' }
-    })
-    .then(result =>{
-        res.status(200).send(JSON.stringify(result));
-        
-    })
+            "year": {$lte: req.query.maxYear, $gte:req.query.minYear},
+            "category":{ $regex: new RegExp("^"+category+".*$"), $options: 'i' },
+            "medium":{ $regex: new RegExp("^"+medium+".*$"), $options: 'i' },
+            
+           })
+           .then(result =>{
+               res.status(200).send(JSON.stringify(result));
+               
+           })
+
 
 } )
 
 app.get('/homepage/filters',async (req,res) => {
+    //retrieve the maximum year and all catefories and mediums so filters stay updated
 let filterBundle = {"maxYear": null, "categories":null, "mediums":null};
    await Art.distinct("year")
         .then( async result =>{
@@ -326,20 +361,23 @@ let filterBundle = {"maxYear": null, "categories":null, "mediums":null};
 } )
 //USER FOLLOWERS------------------------------------
 app.get('/artistFollowers', async (req,res) => {
+    //check session
     if(req.session.userID){
         let loggedin;
         let name;
         let followerList = [];
+        
+    //find the user with the session and render artist follower page with follower list
  await User.findById(req.session.userID)
  .then(async result =>{
             
             name = result.name;
-            console.log(result.following);
+            // console.log(result.following);
              for(let follower in result.following){
                 // console.log(result.art[follower]);
                 await  User.findById(result.following[follower])
                     .then(follower =>{
-                        console.log(follower);
+                        // console.log(follower);
                         followerList.push(follower);
                     })
                     .catch(err => {
@@ -364,15 +402,19 @@ else res.redirect("/login");
     } )
 // USER NOTIFICATIONS----------------------------------wip
     app.get('/notif', async (req,res) => {
+        //check session
         if(req.session.userID){
             let loggedin;
             let name;
             let notificationsArt = [];
             let notificationsWorkshops = [];
+
+            //find the user in the session
             await User.findById(req.session.userID)
             .then(async result =>{
                 name = result.name;
             })
+            //find the notifications associated with user
      await Notifications.find({"user":req.session.userID})
      .then(async result =>{
     
@@ -440,6 +482,7 @@ else res.redirect("/login");
         } )
 
         app.put('/notif', async (req,res) => {
+            //delete all notifications of the user in the session
             if(req.session.userID){
                 Notifications.deleteMany({"user":req.session.userID}).then( result =>{
                     res.sendStatus(200);
@@ -451,12 +494,26 @@ else res.redirect("/login");
             } )
 //USER SETTINGS-------------------------------------wip
 app.get('/userSettings', async (req,res) => {
+    //check session
     if(req.session.userID){
         let loggedin;
-        
+        let hadArt = false;
+
+        //find the user using session
  await User.findById(req.session.userID)
  .then(async result =>{
     let reviewed = [];
+    let artlist;
+    
+//find if user has art, retrieve artlist, retrieve reviews and render with this information
+    await Art.find({"artist": req.session.userID})
+    .then( hasArt =>{
+        artlist = hasArt;
+        if(hasArt.length != 0)
+        hadArt = true;
+    else
+    hadArt = false;
+    })
     await Review.find({"user":result._id})
      .then(async reviews =>{
          console.log(reviews);
@@ -473,10 +530,10 @@ app.get('/userSettings', async (req,res) => {
          
      })
 
-     console.log(reviewed);
+     console.log(artlist);
      loggedin = {name: result.name, upgrade: result.upgrade};
 
- res.render('userSettings', {user: loggedin,reviews:reviewed});
+ res.render('userSettings', {user: loggedin,reviews:reviewed, hasArt:hadArt, artlist:artlist});
      
  })
  .catch(err => {
@@ -488,15 +545,13 @@ else res.redirect("/login");
     } )
 
     app.put('/upgrade', async (req,res)=>{
-        if(req.session.userID){
-            let name;
-            console.log(req.body);
+        //check session
             if(req.body.upgrade){
             console.log("upgrade");
             await User.findById(req.session.userID)
             .then(async result =>{
 
-                
+                //depending on if user also sent art data to register, add art and change upgrade
                 console.log(req.body);
                 if(req.body.newArt){
           await  Art.findOne({"title":req.body.newArt.title})
@@ -549,7 +604,7 @@ else res.redirect("/login");
 
 
      
-        }
+        
 
         
 
@@ -557,10 +612,12 @@ else res.redirect("/login");
     })
 //VIEW ART-------------------------------------wip
 app.get('/viewArt', async (req,res) => {
+    //check session
     if(req.session.userID){
         let loggedin;
         let name;
         let artList = [];
+        //find the user with the same session and render viewart page
  await User.findById(req.session.userID)
         .then(async result =>{
             
@@ -588,7 +645,6 @@ app.get('/viewArt', async (req,res) => {
 			res.status(500).send("No session found");
 		});
         
-        // console.log(artList);
         loggedin = {name: name, artlist: artList};
         if(name !== "")
         res.render('viewArt', {user: loggedin});
@@ -600,10 +656,12 @@ else res.redirect("/login");
 
 //VIEW WORKSHOPS----------------------------------
 app.get('/viewWorkshops', async (req,res) => {
+    //chekc session
     if(req.session.userID){
         let loggedin;
         let name;
         let workshopList = [];
+        //find user with the same session and render view workshop page
  await User.findById(req.session.userID)
         .then(async result =>{
             
@@ -643,21 +701,27 @@ else res.redirect("/login");
 
 //User Page-----------------------
 app.get('/user/:userID',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.userID;
-    console.log(id);
-    let artList = [];
-    let workshops =[];
-    if(req.session.userID){
+        let id = req.params.userID;
+        // console.log(id);
+        let artList = [];
+        let workshops =[];
         let name;
+        let follows = false;
+        //find the user with the same session, then find the user with the id and render their page
         User.findById(req.session.userID)
         .then( result =>{
-            
+            console.log(result.following);
+            console.log(id);
+            for(let i = 0; i<result.following.length;i++){
+                if(result.following[i].toString() == id.toString())
+                    follows = true;
+            }
             name = {name:result.name};
             User.findById(id)
             .then(async result =>{
-                if(result.upgrade){
+                
                 for(let art in result.art){
 
                     await  Art.findById(result.art[art])
@@ -681,10 +745,10 @@ app.get('/user/:userID',(req,res) => {
                         });
                 }
                 let newuserbundle = {user: result, art:artList, workshops:workshops};
-                res.render('user' ,{newuser:newuserbundle, user:name});
-            }
-                else
-                res.status(500).send("User Is Not Artist");
+                console.log(follows);
+                res.render('user' ,{newuser:newuserbundle, user:name, follows:follows});
+            
+
 
 
             })
@@ -700,22 +764,23 @@ app.get('/user/:userID',(req,res) => {
         
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 //FOLLOW 
 app.put('/user/:userID',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.userID;
-    console.log(id);
-    let artList = [];
-    if(req.session.userID){
+
+        let id = req.params.userID;
+        console.log(id);
+        let artList = [];
         let name;
+        //find user with in the session and make them a follower or unfollow the user with the id
         User.findById(req.session.userID)
         .then( result =>{
-            
+            console.log(result.following.includes(id));
             if(result.following.includes(id))
             result.following.splice(result.following.indexOf(id),1);
             else
@@ -732,34 +797,39 @@ app.put('/user/:userID',(req,res) => {
         
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 //Art Page--------------------------
 app.get('/art/:artID',(req,res) => {
+   //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.artID;
-    // console.log(id);
-    if(req.session.userID){
+
+        let id = req.params.artID;
         let name;
         let liked;
         let reviews = [];
         let likecounter = 0;
         let reviewed;
+        let artist = {name: null, url: null};
+        //find the user with in the session and render the art page based on the provided art id
         User.findById(req.session.userID)
         .then( async owners =>{
             let owner = false;
             name = {name:owners.name};
            await Art.findById(req.params.artID)
             .then(async result =>{
-                // console.log(result.artist);
-                // console.log(owners._id.toString());
+               await User.findById(result.artist)
+                .then( async artmaker =>{
+                    artist["name"] = artmaker.name;
+                    artist["url"] = result.artist;
+                });
+
                 if(result.artist.toString() == req.session.userID.toString())
                 owner = true;
 
-                
+                //check if the user reviewed or liked this art
               await  Review.find({"user":req.session.userID})
                 .then(async reviews =>{
                         let temp = [];
@@ -775,7 +845,7 @@ app.get('/art/:artID',(req,res) => {
                         else
                         liked = false;
                 })
-
+                //find all the reviews on this art
                 await Review.find({"art":id})
                 .then(async reviewdatas =>{
                         if(reviewdatas){
@@ -802,11 +872,11 @@ app.get('/art/:artID',(req,res) => {
                         }
 
                 })
-                // console.log(owner);
+  
                 if(owner)
-                res.render('ownart' ,{newart:result, user:name, liked:liked, reviews:reviews, likecounter:likecounter, reviewed:reviewed});
+                res.render('ownart' ,{newart:result, user:name, liked:liked, reviews:reviews, likecounter:likecounter, reviewed:reviewed, artist:artist});
                 else
-                res.render('art' ,{newart:result, user:name, liked:liked, reviews:reviews, likecounter:likecounter, reviewed:reviewed});
+                res.render('art' ,{newart:result, user:name, liked:liked, reviews:reviews, likecounter:likecounter, reviewed:reviewed, artist:artist});
             })
             .catch(err => {
                 console.log(err);
@@ -819,30 +889,47 @@ app.get('/art/:artID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 
 //WORKSHOP page----------------------------
 app.get('/workshops/:workshopID',(req,res) => {
+    
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.workshopID;
-    console.log(id);
-    if(req.session.userID){
+        
+        let id = req.params.workshopID;
         let name;
+        let owner = false;
+        let enrolledUsers = [];
+        //find the user in the session
         User.findById(req.session.userID)
         .then( use =>{
             
             name = {name:use.name};
+            //check if user is enrolled and add all enrolled users to array to render the page with
             Workshop.findById(id)
-            .then(result =>{
+            .then( async result =>{
                 let enrolled = false;
-
+                if(use._id.toString() == result.user.toString())
+                owner = true;
                 if(result.enrolled.includes(use._id))
                 enrolled = true;
-                res.render('workshop', {workshop:result, user:name, enrolled:enrolled});
+
+                for(let i = 0; i<result.enrolled.length;i++){
+                    
+                   await User.findById(result.enrolled[i])
+                        .then(enrolleduser =>{
+                        
+                            let bundle = {name: enrolleduser.name, url:enrolleduser._id};
+                            enrolledUsers.push(bundle);
+                        })
+                }
+                console.log(enrolledUsers);
+                res.render('workshop', {workshop:result, user:name, enrolled:enrolled, owner:owner, enrolledusers:enrolledUsers});
+
             })
             .catch(err => {
                 console.log(err);
@@ -855,23 +942,24 @@ app.get('/workshops/:workshopID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 
 //enroll workshop-------------------------
 app.put('/workshops/:workshopID',(req,res) => {
+   //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.workshopID;
-    console.log(id);
-    if(req.session.userID){
+        
+        let id = req.params.workshopID;
         let name;
+        //find the user in the session
         User.findById(req.session.userID)
         .then( use =>{
             
             name = {name:use.name};
+            //find the workshop with the id and either unenrolled or enroll to the workshop
             Workshop.findById(id)
             .then(result =>{
                 console.log(result.enrolled.includes(use._id));
@@ -894,22 +982,21 @@ app.put('/workshops/:workshopID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 //ADD ART
 app.post('/addArt',(req,res) => {
-    if(req.session.userID){
-    User.findById(req.session.userID)
-    // let id = req.params.workshopID;
-    // console.log(id);
+    //check session
     if(req.session.userID){
         let name;
+        //find the user in the session
         User.findById(req.session.userID)
         .then( result =>{
             
             name = {name:result.name};
+            //find if there is an art with this title already, if not save new art
             Art.findOne({"title":req.body.title})
             .then(async art =>{
                 if(!art)
@@ -958,30 +1045,30 @@ app.post('/addArt',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 
 //ADD WORKSHOP
 app.post('/addWorkshop',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.workshopID;
-    console.log(id);
-    if(req.session.userID){
+        let id = req.params.workshopID;
         let name;
+        //find user in the session
         User.findById(req.session.userID)
         .then( result =>{
             
             name = {name:result.name};
+            //find a workshop with the same title, if found don't save the workshop and send 400 code
             Workshop.findOne({"title":req.body.title})
             .then(async workshop =>{
                 if(!workshop)
                 {
                     let newWorkshop = new Workshop;
                     newWorkshop.title = req.body.title;
-                    newWorkshop.artist = req.session.userID ;
+                    newWorkshop.user = req.session.userID ;
                     newWorkshop.description = req.body.desc;
                     newWorkshop.enrolled = [];
 
@@ -1020,23 +1107,23 @@ app.post('/addWorkshop',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 
 //Like an Art-------------------
 app.put('/like/:artID',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.artID;
-    console.log(id);
-    if(req.session.userID){
+        let id = req.params.artID;
         let name;
+        //find the user in the session
         User.findById(req.session.userID)
         .then( result =>{
             
             name = {name:result.name};
+            //check if user already has liked the art, if they haven't make a new like, otherwise switch from unlike to like
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
                 console.log(review);
@@ -1071,23 +1158,23 @@ app.put('/like/:artID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 
 //UNLIKE A ART
 app.post('/unlike/:artID',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.artID;
-    console.log(id);
-    if(req.session.userID){
+        let id = req.params.artID;
         let name;
+        //find the user in the session
         User.findById(req.session.userID)
         .then( result =>{
             
             name = {name:result.name};
+            // switch from like to unlike
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
                 console.log(review);
@@ -1122,22 +1209,22 @@ app.post('/unlike/:artID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )
 //Review an Art-------------------
 app.put('/review/:artID',(req,res) => {
-    if(req.session.userID){
-        User.findById(req.session.userID)
-        let id = req.params.artID;
-        console.log(id);
+        //check session
         if(req.session.userID){
+            let id = req.params.artID;
             let name;
+            //find teh user in the session
             User.findById(req.session.userID)
             .then( result =>{
                 
                 name = {name:result.name};
+                //check if the user has already made a review on this art, if they have change the text, otherwise create a new one
                 Review.findOne({"user":req.session.userID, "art":id})
                 .then(async review =>{
                     console.log(review);
@@ -1172,22 +1259,22 @@ app.put('/review/:artID',(req,res) => {
             });
         }
     
-    }
+    
     else res.redirect('/login');
 } 
 )
 //unreview art
 app.post('/unreview/:artID',(req,res) => {
+    //check session
     if(req.session.userID){
-    User.findById(req.session.userID)
-    let id = req.params.artID;
-    console.log(id);
-    if(req.session.userID){
+        let id = req.params.artID;
         let name;
+        //find user in the session
         User.findById(req.session.userID)
         .then( result =>{
             
             name = {name:result.name};
+            //find the review on this art and delete text
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
                 review.reviewText = "";
@@ -1205,7 +1292,7 @@ app.post('/unreview/:artID',(req,res) => {
 		});
     }
 
-}
+
 else res.redirect('/login');
 } 
 )

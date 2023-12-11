@@ -10,6 +10,7 @@ createButton.onclick = (event)=>{
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert("Account created");
+            window.location.href = "/login";
         }
         else if(this.readyState == 4 && this.status == 400) {
             alert("Username already exists, please input a different username");

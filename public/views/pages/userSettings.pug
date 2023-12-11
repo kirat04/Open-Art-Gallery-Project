@@ -5,8 +5,20 @@ html
     body.homepagebackground 
         include ../partials/header
         div.notifcenter
-            
+            - var upgrade
+            if user.upgrade == true
+                - upgrade = "Become a Patron"
+            else 
+                - upgrade = "Become an Artist"
+            if !hasArt
+                input.newnotif.clickcursor.highlight(type="button", value= upgrade, id = "upgradebutton")
+            else 
+                input.newnotif.clickcursor.highlight(type="button", value= upgrade, id = "upgradebuttonnoart")
+            br
+            |
+            br
             div(id="artsubmit").hide
+
                 p You must first add a artwork to become an Artist 
                 label(for="title") Title 
                 input(type="text" id ="title" name = "title")
@@ -34,7 +46,7 @@ html
                         a(href="/art/"+review.reviewArt.art) #{review.artname}
                         | 
                         form(action="/unlike/" +review.reviewArt.art, method="post") 
-                            input(type="submit", value="Remove Like")
+                            input.clickcursor.highlight(type="submit", value="Remove Like")
                         br
                         |
                         br
@@ -44,20 +56,17 @@ html
                         a(href="/art/"+review.reviewArt.art) #{review.artname}
                         | 
                         form(action="/unreview/" +review.reviewArt.art, method="post") 
-                            input(type="submit", value="Remove Like")
+                            input.clickcursor.highlight(type="submit", value="Remove Review")
                         br
                         |
-                        br  
-        - var upgrade
-            if user.upgrade == true
-                - upgrade = "Become a Patron"
-            else 
-                - upgrade = "Become an Artist"
-            if hasArt
-                input(type="button", value= upgrade, id = "upgradebutton")
-            else 
-                input(type="button", value= upgrade, id = "upgradebuttonnoart")
-            br
-            |
-            br
+                        br 
+            if artlist.length != 0
+                div 
+                    p.viewarttitle Your Art 
+                    each art in artlist 
+                        li.homepagesearchimage
+                            img(src=art.poster, alt="", width = 150, height =150) 
+                            a(href='/art/'+ art._id) #{art.title}
+        
+        
     script(src="/settings.js")

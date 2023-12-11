@@ -4,20 +4,32 @@ html
         link(rel="stylesheet" href="/styles.css")
     body.homepagebackground
         include ../partials/header
-        p this is #{workshop.title}'s page
+        div.centertext
+            p
+                span.workshoptitle #{workshop.title}
+            if !owner
+                if enrolled 
+                    input.highlight.clickcursor(type="button", value="unenroll", id = "enrollbutton")
+                else
+                    input.highlight.clickcursor(type="button", value="enroll", id = "enrollbutton")
 
-        if enrolled 
-            input(type="button", value="unenroll", id = "enrollbutton")
-        else
-            input(type="button", value="enroll", id = "enrollbutton")
+            - let count = 0
 
-        - let count = 0
-
-        each d in workshop.enrolled 
-            - count++
-        if count >0
-            p This workshop has #{count} users enrolled
-        else 
-            p This workshop has no users enrolled
+            each d in workshop.enrolled 
+                - count++
+            if count >0
+                p #{count} users enrolled
+            else 
+                p No users enrolled
+            if workshop.description != ""
+                p.notiftitle Description: 
+                h7.bold #{workshop.description}
+            p.notiftitle Enrolled Users:
+            div.followerdiv
+                 
+                each user in enrolledusers
+                    li.artistfollowers.oddlist.highlight
+                        a.artistlink(href="/user/"+user.url) #{user.name}
+                    br 
 
         script(src="/workshop.js")

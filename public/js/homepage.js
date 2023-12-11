@@ -197,6 +197,7 @@ filterBut.onclick = (event)=>{
 
 searchFilteredArt.onclick = (event)=>{
     let search = document.getElementById("searchtext").value;
+    let artist = document.getElementById("artist").value;
     let minYear = document.getElementById("yearlower").value;
     let maxYear = document.getElementById("yearhigher").value;
     let category = document.getElementById("categories").value;
@@ -276,7 +277,7 @@ searchFilteredArt.onclick = (event)=>{
         }
     };
 
-    xhttp.open("GET", "/homepage/search/art?search="+search+"&category="+category+"&minYear="+minYear+"&maxYear="+maxYear+"&medium="+medium, true);
+    xhttp.open("GET", "/homepage/search/art?search="+search+"&category="+category+"&minYear="+minYear+"&maxYear="+maxYear+"&medium="+medium+"&artist="+artist, true);
 
     xhttp.send();
 }

@@ -4,11 +4,11 @@ html
         link(rel="stylesheet" href="/styles.css")
     body.homepagebackground 
         include ../partials/header
-        input(type="button", value="Add Workshop", id = 'addArt')
+        input.newnotif.clickcursor.highlight(type="button", value="Add Workshop", id = 'addArt')
         br
         |
         br
-        div(id="artsubmit").hide 
+        div(id="artsubmit").hide.marginleft 
             label(for="title") Title 
             input(type="text" id ="titleWorkshop" name = "titleWorkshop")
             br

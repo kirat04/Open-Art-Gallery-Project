@@ -50,11 +50,12 @@ html
                 | 
                 input.homepagesearchbutton(type="button", value="Filter Art", id = "filters")
             br
-            div.hide(id = "filterselection")
+            div.hide.filter(id = "filterselection")
+                input(type="text", id="artist")
+                label(for="artist") Artist
+                br
                 input(type="number" id = "yearlower" value = "0")
                 label(for="yearlower") Year(Min)
-                br
-                |
                 br
                 input(type="number" id = "yearhigher" value ="2023")
                 label(for="yearhigher") Year(Max)

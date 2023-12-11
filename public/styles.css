@@ -283,7 +283,7 @@ text-align: center;
 }
 .artdim{
     width:400;
-    height:400;
+    height:auto;
     margin-left: 39.6vw;
 }
 .viewartcontainer{
@@ -320,4 +320,63 @@ text-align: center;
     font-size: x-large;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: bold;
+}
+.artcenter{
+    transform: translateX(42vw);
+}
+.artdesc{
+    max-width: 38vw;
+    transform: translateX(-7.5vw);
+}
+.likeart{
+    /* margin-top: translateY(-18vh); */
+   margin-left: 10vw;
+    
+}
+.addreview{
+    height:10vh;
+    margin-left: 1vw;
+}
+.addtext{
+    margin-left: 10vw;
+    transform: translateX(-1vw);
+}
+.showreviews{
+    margin-left: 45vw;
+}
+.filter{
+    text-align: left;
+    height:10px;
+    margin-left: 40vw;
+}
+.newnotif{
+    font-size: x-large;
+}
+.clearnotif{
+    background-color: rgb(255, 255, 255);
+    padding:20px;
+    border:none;
+}
+.clickcursor:hover{
+    cursor:pointer;
+}
+.marginleft{
+    margin-left: 20vw;
+}
+.likebutton{
+    border-radius: 15px;
+}
+.rmvbullet{
+    list-style-type: none;
+}
+.usertitles{
+    font-size: x-large;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.workshoptitle{
+    font-size: xx-large;
+    font-weight: bold;
+    font-style: italic;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }

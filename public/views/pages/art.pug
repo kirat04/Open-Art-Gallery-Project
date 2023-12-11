@@ -5,30 +5,46 @@ html
     body.homepagebackground
         include ../partials/header
         img.artdim(src=newart.poster, alt="")
-        p this is #{newart.title}'s page
-        h7 Liked by #{likecounter} users
-        br
-        if liked
-            input(type="button", value="unlike" id="likebutton")
-        else 
-            input(type="button", value="like" id="likebutton")
-        
-        br
-        |
-        br
-        if reviewed
-            input(type="button" value = "Change Your review" id="leaveReview")
-        else
-            input(type="button" value = "Leave a review" id="leaveReview")
-        div.hide(id="reviewContainer")
-            textarea(name="", cols="30", rows="10", id = "reviewdata") 
-            input(type="button", value="Submit Review" id="submitreview")
-        div(id="reviews")
-            p Reviews 
+        div.artcenter
+            br
+            h7 Title: #{newart.title}
+                span.likeart 
+                    h7 Liked by #{likecounter} users
+                    |  
+                    if liked
+                        input.likebutton.clickcursor(type="button", value="unlike" id="likebutton")
+                    else 
+                        input.likebutton.clickcursor(type="button", value="like" id="likebutton")
+            br  
+            h7 Year: #{newart.year}
+            br 
+            h7  Artist:
+                span 
+                    a(href="/user/"+artist.url) #{artist.name}
+            br
+            h7 Category: #{newart.category}
+            |  
+            h7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Medium: #{newart.medium}
+            div.artdesc
+                p.notiftitle Description:
+                p #{newart.description}
+        div.likeart
+
+        div.addreview  
+            if reviewed
+                input.highlight.newnotif(type="button" value = "Change Your review" id="leaveReview")
+            else
+                input.highlight.newnotif(type="button" value = "Leave a review" id="leaveReview")
+            div.hide(id="reviewContainer")
+                textarea.addtext.newnotif(name="", cols="30", rows="10", id = "reviewdata")
+                br 
+                input(type="button", value="Submit Review" id="submitreview")
+        div.showreviews(id="reviews")
+            p.notiftitle Reviews 
 
             each review in reviews
                 if review.text && review.text != ""
-                    h7 #{review.user} says:
+                    h7.bold #{review.user} says:
                     br
                     h7 #{review.text}
                     br

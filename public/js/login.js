@@ -14,6 +14,12 @@ loginButton.onclick = (event)=>{
             window.location = '/homepage';
             
         }
+        if (this.readyState == 4 && this.status == 400) {
+            alert("User doesn't exist");
+            console.log(this.response);
+            window.location = '/homepage';
+            
+        }
     };
 
     xhttp.open("POST", "/login", true);
