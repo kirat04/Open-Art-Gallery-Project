@@ -1,5 +1,6 @@
 let followButton = document.getElementById("follow");
 
+//send a put request to the server to update the follow value for this user
 followButton.onclick = (event)=>{
     console.log(window.location.href.substring(21));
     var xhttp = new XMLHttpRequest();

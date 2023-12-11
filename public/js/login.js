@@ -1,5 +1,6 @@
 let loginButton = document.getElementById("loginbutton");
 
+//if the login button is clicked, send a post request to the server with the username and password
 loginButton.onclick = (event)=>{
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;

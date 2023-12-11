@@ -1,5 +1,5 @@
 let enrollButton = document.getElementById('enrollbutton');
-
+//send a put request to either enroll or unenroll from the workshop
 enrollButton.onclick = (event) =>{
     console.log(window.location.href.substring(32));
     var xhttp = new XMLHttpRequest();

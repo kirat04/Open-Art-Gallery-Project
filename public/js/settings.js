@@ -2,6 +2,7 @@ let upgrade = document.getElementById("upgradebutton");
 let submitButton = document.getElementById("submit");
 let submitnoart = document.getElementById("upgradebuttonnoart");
 
+//if the user doesn't need to submit art, send a post request when it is clicked to change account
 if(submitnoart)
 submitnoart.onclick = (event)=>{
     let upgradeType = {upgrade: false};
@@ -37,6 +38,7 @@ submitnoart.onclick = (event)=>{
             }
         }
     }
+    //if the upgrade button exists, you will have to provide a new artwork if upgrading to artist, otherwise changing to patron is the same
 if(upgrade)
 upgrade.onclick = (event)=>{
     let upgradeType = {upgrade: false};
