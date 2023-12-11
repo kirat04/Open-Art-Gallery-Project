@@ -232,7 +232,7 @@ app.get('/homepage',(req,res) => {
 User.findById(req.session.userID)
         .then(async result =>{
             
-
+            //if a notification that has not been found, set viewnotif to true and render using this information
            await Notifications.findOne({"user":result._id,"viewed":"false"})
                 .then(notif =>{
                     if(notif)
@@ -261,7 +261,7 @@ else res.redirect("/login");
 
 app.post('/homepage/search/artists',(req,res) => {
     console.log(req.body.search);
-    //search for artists by name
+    //search for artists by name using regex and send the result
     User.find({ "name" : { $regex: new RegExp("^"+req.body.search+".*$"), $options: 'i' } })
     .then(result =>{
         res.status(200).send(JSON.stringify(result));
@@ -288,7 +288,7 @@ app.get('/homepage/search/art',async (req,res) => {
     //use multiple filters to filter the art before sending results
     let category;
     let medium;
-
+//if category and/or medium are "all" set them to blank so regex can work properly
     if(req.query.category == "all")
     category = "";
 else
@@ -298,11 +298,13 @@ if(req.query.medium == "all")
 medium = "";
 else
 medium = req.query.medium;
+
+//create an array to store all images that are returned for search with artist (since it doesn't return a single array)
 let array = [];
     if(req.query.artist && req.query.artist != "")
     User.find({ "name" : { $regex: new RegExp("^"+req.query.artist+".*$"), $options: 'i' } })
         .then(async artists =>{
-            // console.log(artists);
+            
             for(let i = 0; i< artists.length;i++){
               await  Art.find({ "title" : { $regex: new RegExp("^"+req.query.search+".*$"), $options: 'i' } ,
                 "year": {$lte: req.query.maxYear, $gte:req.query.minYear},
@@ -311,7 +313,7 @@ let array = [];
                 "artist":artists[i]._id
                })
                .then(result =>{
-                    // console.log(result);
+                   
                     for(let j = 0; j<result.length;j++){
                         array.push(result[j]);
                     }
@@ -323,6 +325,7 @@ let array = [];
             console.log(array);
             res.status(200).send(JSON.stringify(array));
         })
+        //if there is no artist in the filter, search without it and array is not needed because the function returns one
     else
     Art.find({ "title" : { $regex: new RegExp("^"+req.query.search+".*$"), $options: 'i' } ,
             "year": {$lte: req.query.maxYear, $gte:req.query.minYear},
@@ -339,7 +342,7 @@ let array = [];
 } )
 
 app.get('/homepage/filters',async (req,res) => {
-    //retrieve the maximum year and all catefories and mediums so filters stay updated
+    //retrieve the maximum year and all categories and mediums so filters stay updated in the homepage
 let filterBundle = {"maxYear": null, "categories":null, "mediums":null};
    await Art.distinct("year")
         .then( async result =>{
@@ -372,12 +375,12 @@ app.get('/artistFollowers', async (req,res) => {
  .then(async result =>{
             
             name = result.name;
-            // console.log(result.following);
+            
              for(let follower in result.following){
-                // console.log(result.art[follower]);
+               
                 await  User.findById(result.following[follower])
                     .then(follower =>{
-                        // console.log(follower);
+                       
                         followerList.push(follower);
                     })
                     .catch(err => {
@@ -417,16 +420,17 @@ else res.redirect("/login");
             //find the notifications associated with user
      await Notifications.find({"user":req.session.userID})
      .then(async result =>{
-    
+                //if there are notifs, continue otherwise render the nonotif page
                 if(result.length != 0){
                 for(let i = 0; i< result.length;i++){
                     let newArtBundle = {"artist":null, "art":null, "viewed":false};
+                    //sort the notifications by added art and added workshop and put into different arrays then render the page
                     if(result[i].addedArt){
                    await User.findById(result[i].artist)
                         .then(async artist =>{
-                            // console.log(result);
+                            ;
                             newArtBundle["artist"] = artist;
-                            // console.log(newArtBundle);
+                        
                           await  Art.findById(result[i].addedArt)
                             .then(async art =>{
                                 newArtBundle["art"] = art;
@@ -545,14 +549,13 @@ else res.redirect("/login");
     } )
 
     app.put('/upgrade', async (req,res)=>{
-        //check session
+        //check if upgrading, if is check if theres an art that has come with it and add, if not change upgrade
             if(req.body.upgrade){
-            console.log("upgrade");
             await User.findById(req.session.userID)
             .then(async result =>{
 
-                //depending on if user also sent art data to register, add art and change upgrade
-                console.log(req.body);
+                //depending on if user also sent art data to upgrade, add art and change upgrade
+                
                 if(req.body.newArt){
           await  Art.findOne({"title":req.body.newArt.title})
             .then(async art =>{
@@ -601,13 +604,6 @@ else res.redirect("/login");
             res.sendStatus(200);
         });
     }
-
-
-     
-        
-
-        
-
         
     })
 //VIEW ART-------------------------------------wip
@@ -626,6 +622,7 @@ app.get('/viewArt', async (req,res) => {
         else
         name = "";
 
+        //retrieve all information from each art piece in the user's collection
              for(let art in result.art){
 
                 await  Art.findById(result.art[art])
@@ -656,7 +653,7 @@ else res.redirect("/login");
 
 //VIEW WORKSHOPS----------------------------------
 app.get('/viewWorkshops', async (req,res) => {
-    //chekc session
+    //check session
     if(req.session.userID){
         let loggedin;
         let name;
@@ -669,7 +666,7 @@ app.get('/viewWorkshops', async (req,res) => {
             name = result.name;
         else
         name = "";
-
+            //retrieve each workshop in the user's collection
              for(let workshop in result.workshops){
 
                 await  Workshop.findById(result.workshops[workshop])
@@ -714,11 +711,13 @@ app.get('/user/:userID',(req,res) => {
         .then( result =>{
             console.log(result.following);
             console.log(id);
+            //check if the user is following or not to display "unfollow" or "follow" button
             for(let i = 0; i<result.following.length;i++){
                 if(result.following[i].toString() == id.toString())
                     follows = true;
             }
             name = {name:result.name};
+            //find all the art and all the workshops in the artist's collection and render using this data
             User.findById(id)
             .then(async result =>{
                 
@@ -780,7 +779,7 @@ app.put('/user/:userID',(req,res) => {
         //find user with in the session and make them a follower or unfollow the user with the id
         User.findById(req.session.userID)
         .then( result =>{
-            console.log(result.following.includes(id));
+
             if(result.following.includes(id))
             result.following.splice(result.following.indexOf(id),1);
             else
@@ -833,7 +832,6 @@ app.get('/art/:artID',(req,res) => {
               await  Review.find({"user":req.session.userID})
                 .then(async reviews =>{
                         let temp = [];
-                        // console.log(reviews);
                         for(let i =0; i < reviews.length;i++){
                             temp.push(reviews[i].art.toString());
                             console.log(reviews[i].art.toString());
@@ -854,7 +852,6 @@ app.get('/art/:artID',(req,res) => {
                                 likecounter++;
                                 
                                 let reviewBundle = {user:null, text:null};
-                                // console.log(reviewdatas[i].user)
                                await User.findById(reviewdatas[i].user)
                                 .then(async use =>{
                                         reviewBundle.user = use.name;
@@ -917,7 +914,7 @@ app.get('/workshops/:workshopID',(req,res) => {
                 owner = true;
                 if(result.enrolled.includes(use._id))
                 enrolled = true;
-
+                ///get all enrolled user's name and url to display
                 for(let i = 0; i<result.enrolled.length;i++){
                     
                    await User.findById(result.enrolled[i])
@@ -1014,7 +1011,7 @@ app.post('/addArt',(req,res) => {
                     result.art.push(newArt._id);
                     result.save();
 
-                    
+                    //send a notification to all users that are following this user
                   await  User.find({"following": req.session.userID})
                         .then(async followers =>{
                             console.log(followers);
@@ -1076,7 +1073,7 @@ app.post('/addWorkshop',(req,res) => {
                     result.workshops.push(newWorkshop._id);
                     result.save();
                     res.sendStatus(200);
-
+                    //send a notification to all users that are following this user
                     await  User.find({"following": req.session.userID})
                         .then(async followers =>{
                             console.log(followers);
@@ -1126,7 +1123,7 @@ app.put('/like/:artID',(req,res) => {
             //check if user already has liked the art, if they haven't make a new like, otherwise switch from unlike to like
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
-                console.log(review);
+
                 if(!review){
                     let rev = new Review;
                     rev.user = req.session.userID;
@@ -1177,7 +1174,7 @@ app.post('/unlike/:artID',(req,res) => {
             // switch from like to unlike
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
-                console.log(review);
+
                 if(!review){
                     let rev = new Review;
                     rev.user = req.session.userID;
@@ -1274,7 +1271,7 @@ app.post('/unreview/:artID',(req,res) => {
         .then( result =>{
             
             name = {name:result.name};
-            //find the review on this art and delete text
+            //find the review on this art and clear review text data
             Review.findOne({"user":req.session.userID, "art":id})
             .then(async review =>{
                 review.reviewText = "";

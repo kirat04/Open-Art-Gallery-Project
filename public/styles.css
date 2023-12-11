@@ -223,12 +223,24 @@ text-align: center;
     display:inline-block;
     margin:auto;
     padding: 5vh;
+    
+}
+.imagelink{
+    color: black;
+    padding-top: 200px;
+    /* padding-left:25%;
+    padding-right:8vw; */
+    /* width: 0px; */
+}
+.centerimage{
+    margin-right:10vw;
+    border: 5px solid black;
 }
 .homesearchcontainer{
     border: 5px outset rgb(0,68,26);
     width: 34vw;
     margin: auto;
-    padding-right: 20px;
+    padding-right: 50px;
     padding-bottom:10px;
     height:50vh;
     
@@ -379,4 +391,7 @@ text-align: center;
     font-weight: bold;
     font-style: italic;
     font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.homepagebutton:hover{
+    color: black;
 }

@@ -126,10 +126,18 @@ searchArt.onclick = (event)=>{
                 let resultLink = document.createElement('a');
                 resultLink.href = "/art/" + incomingResults[i]._id;
                 resultLink.innerText = incomingResults[i].title;
+                resultLink.classList.add("imagelink");
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
                 image.width = 200;
                 image.height = 200;
+                
+                newResult.onmouseover = (event) =>{
+                    image.classList.add("centerimage");
+                }
+                newResult.onmouseleave = (event)=>{
+                    image.classList.remove("centerimage");
+                }
                 newResult.appendChild(image);
                 newResult.appendChild(document.createElement('br'));
                 newResult.appendChild(document.createElement('br'));
@@ -222,10 +230,18 @@ searchFilteredArt.onclick = (event)=>{
                 let resultLink = document.createElement('a');
                 resultLink.href = "/art/" + incomingResults[i]._id;
                 resultLink.innerText = incomingResults[i].title;
+                resultLink.classList.add("imagelink");
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
                 image.width = 200;
                 image.height = 200;
+                                
+                newResult.onmouseover = (event) =>{
+                    image.classList.add("centerimage");
+                }
+                newResult.onmouseleave = (event)=>{
+                    image.classList.remove("centerimage");
+                }
                 newResult.appendChild(image);
                 newResult.appendChild(document.createElement('br'));
                 newResult.appendChild(document.createElement('br'));
