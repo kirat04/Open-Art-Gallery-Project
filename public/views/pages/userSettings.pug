@@ -43,7 +43,7 @@ html
                 p.notifTitle Art you have liked
                 each review in reviews 
                     if review.reviewArt.liked
-                        a(href="/art/"+review.reviewArt.art) #{review.artname}
+                        a(href="/art/art/"+review.reviewArt.art) #{review.artname}
                         | 
                         form(action="/review/unlike/" +review.reviewArt.art, method="post") 
                             input.clickcursor.highlight(type="submit", value="Remove Like")
@@ -53,7 +53,7 @@ html
                 p.notifTitle Art you have reviewed 
                 each review in reviews 
                     if review.reviewArt.reviewText && review.reviewArt.reviewText != ""
-                        a(href="/review/art/"+review.reviewArt.art) #{review.artname}
+                        a(href="/art/art/"+review.reviewArt.art) #{review.artname}
                         | 
                         form(action="/review/unreview/" +review.reviewArt.art, method="post") 
                             input.clickcursor.highlight(type="submit", value="Remove Review")
