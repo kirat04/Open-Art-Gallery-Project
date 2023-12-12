@@ -10,7 +10,7 @@ const Workshop = require("../../WorkshopModel");
 const Review = require("../../ReviewModel");
 
 let router = express.Router();
-
+//view artpage
 router.get('/viewArt', async (req,res) => {
     //check session
     if(req.session.userID){

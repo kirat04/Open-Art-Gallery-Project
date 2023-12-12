@@ -85,6 +85,7 @@ router.get('/logout',(req,res) => {
      });
      res.redirect('/user/login');
 } )
+
 //USER HOMEPAGE------------------------------------
 
 router.get('/homepage',(req,res) => {
