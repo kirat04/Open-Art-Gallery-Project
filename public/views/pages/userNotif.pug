@@ -11,18 +11,18 @@ html
                 if artNotif.viewed 
                     h7.newnotif 
                         span
-                            a(href="/user/"+artNotif.artist._id) #{artNotif.artist.name}
+                            a(href="/user/user/"+artNotif.artist._id) #{artNotif.artist.name}
                         span  added 
                         span 
-                            a(href="/art/"+artNotif.art._id) #{artNotif.art.title}
+                            a(href="/art/art/"+artNotif.art._id) #{artNotif.art.title}
                         span  to their art collection.
                 else
                     h7.bold.newnotif 
                         span
-                            a(href="/user/"+artNotif.artist._id) #{artNotif.artist.name}
+                            a(href="/user/user/"+artNotif.artist._id) #{artNotif.artist.name}
                         span  added 
                         span 
-                            a(href="/art/"+artNotif.art._id) #{artNotif.art.title}
+                            a(href="/art/art/"+artNotif.art._id) #{artNotif.art.title}
                         span  to their art collection.
                 br
             br
@@ -35,7 +35,7 @@ html
                 if workshopNotif.viewed
                     h7.newnotif 
                         span
-                            a(href="/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
+                            a(href="/user/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
                         span  added 
                         span 
                             a(href="/workshops/"+workshopNotif.workshop._id) #{workshopNotif.workshop.title}
@@ -43,7 +43,7 @@ html
                 else 
                     h7.bold.newnotif 
                         span
-                            a(href="/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
+                            a(href="/user/user/"+workshopNotif.artist._id) #{workshopNotif.artist.name}
                         span  added 
                         span 
                             a(href="/workshops/"+workshopNotif.workshop._id) #{workshopNotif.workshop.title}

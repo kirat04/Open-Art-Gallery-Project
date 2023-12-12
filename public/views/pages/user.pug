@@ -17,7 +17,7 @@ html
                 ul 
                     each art in newuser.art 
                         li.rmvbullet 
-                            a(href = '/art/'+ art._id) #{art.title}
+                            a(href = '/art/art/'+ art._id) #{art.title}
                 p.usertitles Workshops
                 ul 
                     if newuser.workshops.length == 0
@@ -25,6 +25,6 @@ html
                     else
                         each workshop in newuser.workshops 
                             li.rmvbullet 
-                                a(href = '/workshops/'+ workshop._id) #{workshop.title}
+                                a(href = '/workshop/workshops/'+ workshop._id) #{workshop.title}
             
     script(src="/userPage.js")

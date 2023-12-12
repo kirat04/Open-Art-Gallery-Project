@@ -4,7 +4,7 @@ html
         link(rel="stylesheet" href="/styles.css")
     body.homepagebackground 
         include ../partials/header
-        div.notifcenter
+        div.settingsmargin
             - var upgrade
             if user.upgrade == true
                 - upgrade = "Become a Patron"
@@ -45,7 +45,7 @@ html
                     if review.reviewArt.liked
                         a(href="/art/"+review.reviewArt.art) #{review.artname}
                         | 
-                        form(action="/unlike/" +review.reviewArt.art, method="post") 
+                        form(action="/review/unlike/" +review.reviewArt.art, method="post") 
                             input.clickcursor.highlight(type="submit", value="Remove Like")
                         br
                         |
@@ -53,9 +53,9 @@ html
                 p.notifTitle Art you have reviewed 
                 each review in reviews 
                     if review.reviewArt.reviewText && review.reviewArt.reviewText != ""
-                        a(href="/art/"+review.reviewArt.art) #{review.artname}
+                        a(href="/review/art/"+review.reviewArt.art) #{review.artname}
                         | 
-                        form(action="/unreview/" +review.reviewArt.art, method="post") 
+                        form(action="/review/unreview/" +review.reviewArt.art, method="post") 
                             input.clickcursor.highlight(type="submit", value="Remove Review")
                         br
                         |
@@ -65,8 +65,8 @@ html
                     p.viewarttitle Your Art 
                     each art in artlist 
                         li.homepagesearchimage
-                            img(src=art.poster, alt="", width = 150, height =150) 
-                            a(href='/art/'+ art._id) #{art.title}
+                            img.homepageartdim(src=art.poster, alt=art.title) 
+                            a(href='/art/art/'+ art._id) #{art.title}
         
         
     script(src="/settings.js")

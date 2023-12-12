@@ -11,7 +11,7 @@ createButton.onclick = (event)=>{
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert("Account created");
-            window.location.href = "/login";
+            window.location.href = "/user/login";
         }
         else if(this.readyState == 4 && this.status == 400) {
             //if user name already exists, show an alert that user creation failed
@@ -19,7 +19,7 @@ createButton.onclick = (event)=>{
         }
     }
 
-    xhttp.open("POST", "/user", true);
+    xhttp.open("POST", "/user/user", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(createBundle));
 }

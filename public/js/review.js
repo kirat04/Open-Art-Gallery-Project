@@ -23,7 +23,7 @@ likeButton.onclick = (event)=>{
         }
     };
 
-    xhttp.open("PUT", "/like/"+window.location.href.substring(26), true);
+    xhttp.open("PUT", "/review/like/"+window.location.href.substring(26), true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send();
 }
@@ -38,7 +38,7 @@ reviewButton.onclick = (event)=>{
         }
     };
 
-    xhttp.open("PUT", "/review/"+window.location.href.substring(26), true);
+    xhttp.open("PUT", "/review/review/"+window.location.href.substring(26), true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify({"text":document.getElementById("reviewdata").value}));
 }

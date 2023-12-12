@@ -41,7 +41,7 @@ document.getElementById('poster').value != ""){
         }
     };
 
-    xhttp.open("POST", '/addArt', true);
+    xhttp.open("POST", '/art/addArt', true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(artBundle));
 }
@@ -73,7 +73,7 @@ submitWorkshop.onclick = (event)=>{
         }
     };
 
-    xhttp.open("POST", '/addWorkshop', true);
+    xhttp.open("POST", '/workshop/addWorkshop', true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(workshopBundle));
 }

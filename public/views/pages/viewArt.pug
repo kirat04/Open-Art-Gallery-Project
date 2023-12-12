@@ -40,6 +40,6 @@ html
                 div.viewartcontainer
                     each art in user.artlist
                         li.homepagesearchimage
-                            img(src=art.poster, alt="", width = 150, height =150) 
-                            a(href='/art/'+ art._id) #{art.title}
+                            img.homepageartdim(src=art.poster, alt=art.title) 
+                            a(href='/art/art/'+ art._id) #{art.title}
         script(src="/viewArt.js")

@@ -10,7 +10,7 @@ enrollButton.onclick = (event) =>{
         }
     };
 
-    xhttp.open("PUT", "/workshops/"+window.location.href.substring(32), true);
+    xhttp.open("PUT", "/workshop/workshops/"+window.location.href.substring(32), true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send();
 }

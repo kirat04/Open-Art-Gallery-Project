@@ -8,29 +8,29 @@ html
         div.homepagelinks
             div.homepagelinkcontainer.homepagelinkbackgroundtop
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinktop(href="/artistFollowers") View Artists your following
+                    a.homepagelink.homepagelinktop(href="/user/artistFollowers") View Artists your following
             
             if newNotif.value
                 div.homepagelinkcontainer.homepagelinkbackgroundmid
                     div.homepagelinkcenter
-                        a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+                        a.homepagelink.homepagelinkmid(href="/user/notif") View your notifications
                             img.newNotif(src="https://creazilla-store.fra1.digitaloceanspaces.com/emojis/46430/exclamation-mark-emoji-clipart-md.png", alt="", width= 40, height= 40)
             else 
                 div.homepagelinkcontainer.homepagelinkbackgroundmid
                     div.homepagelinkcenter
-                        a.homepagelink.homepagelinkmid(href="/notif") View your notifications
+                        a.homepagelink.homepagelinkmid(href="/user/notif") View your notifications
             
             div.homepagelinkcontainer.homepagelinkbackgroundbottom
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinkbottom(href="/userSettings") View your Profile
+                    a.homepagelink.homepagelinkbottom(href="/user/userSettings") View your Profile
             
             div.homepagelinkcontainer.homepagelinkbackgroundartist
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinkbottom(href="/viewArt") View your art
+                    a.homepagelink.homepagelinkbottom(href="/art/viewArt") View your art
 
             div.homepagelinkcontainer.homepagelinkbackgroundartist
                 div.homepagelinkcenter
-                    a.homepagelink.homepagelinkmid(href="/viewWorkshops") View your workshops
+                    a.homepagelink.homepagelinkmid(href="/workshop/viewWorkshops") View your workshops
         div.homepagemain
             div
                 br

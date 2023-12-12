@@ -2,7 +2,9 @@
     display:none;
 }
 .heade{
-    margin-left: 41vw;
+    margin-left: 41%;
+    /* min-width: min-content;
+    max-height: fit-content; */
     /* text-align: center; */
 }
 .headerhome{
@@ -10,11 +12,14 @@
     background-color: grey;
     color:bisque;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 10px;
+    font-size: 1vw;
+    padding: 0.5vw;
+    /* width:10vw; */
 }
 .headerlogged{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    padding: 10px;
+    font-size: 1vw;
+    padding: 0.5vw;
     background-color:rgb(149, 250, 166) ;
     color: grey;
 }
@@ -26,7 +31,8 @@
     background-color: rgb(192, 61, 61);
     color:bisque;
     /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    padding: 10px;
+    font-size: 1vw;
+    padding: 0.5vw;
 }
 .loginbackground{
     background-color: rgb(236, 248, 194);
@@ -242,7 +248,7 @@ text-align: center;
     margin: auto;
     padding-right: 50px;
     padding-bottom:10px;
-    height:50vh;
+   
     
 }
 .homesearchcontainerart{
@@ -297,6 +303,10 @@ text-align: center;
     width:400;
     height:auto;
     margin-left: 39.6vw;
+}
+.homepageartdim{
+    width:100%;
+    height:20%;
 }
 .viewartcontainer{
     max-width: 100vw;
@@ -358,7 +368,7 @@ text-align: center;
 }
 .filter{
     text-align: left;
-    height:10px;
+    height:fit-content;
     margin-left: 40vw;
 }
 .newnotif{
@@ -394,4 +404,7 @@ text-align: center;
 }
 .homepagebutton:hover{
     color: black;
+}
+.settingsmargin{
+    margin-left:7vw;
 }

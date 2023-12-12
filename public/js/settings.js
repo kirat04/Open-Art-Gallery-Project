@@ -16,7 +16,7 @@ submitnoart.onclick = (event)=>{
             }
         };
     
-        xhttp.open("PUT", "/upgrade", true);
+        xhttp.open("PUT", "/user/upgrade", true);
         xhttp.setRequestHeader("Content-Type", "application/json");
         xhttp.send(JSON.stringify(upgradeType));
     }
@@ -32,7 +32,7 @@ submitnoart.onclick = (event)=>{
                     }
                 };
             
-                xhttp.open("PUT", "/upgrade", true);
+                xhttp.open("PUT", "/user/upgrade", true);
                 xhttp.setRequestHeader("Content-Type", "application/json");
                 xhttp.send(JSON.stringify(upgradeType));
             }
@@ -52,7 +52,7 @@ upgrade.onclick = (event)=>{
             }
         };
     
-        xhttp.open("PUT", "/upgrade", true);
+        xhttp.open("PUT", "/user/upgrade", true);
         xhttp.setRequestHeader("Content-Type", "application/json");
         xhttp.send(JSON.stringify(upgradeType));
     }
@@ -94,7 +94,7 @@ upgrade.onclick = (event)=>{
                 };
             
         
-                xhttp.open("PUT", "/upgrade", true);
+                xhttp.open("PUT", "/user/upgrade", true);
                 xhttp.setRequestHeader("Content-Type", "application/json");
                 xhttp.send(JSON.stringify(upgradeType));
             }

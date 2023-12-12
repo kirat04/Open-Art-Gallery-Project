@@ -31,7 +31,7 @@ x.onreadystatechange = function() {
         }
     }
 };
-x.open("GET", "/homepage/filters", true);
+x.open("GET", "/user/homepage/filters", true);
 x.send();
 
 //when the search artist button is clicked, get the value of the search bar and send a post request for the artists then display this neatly
@@ -59,7 +59,7 @@ searchArtists.onclick = (event)=>{
             for(let i = 0; i<incomingResults.length;i++){
                 let newResult = document.createElement('li');
                 let resultLink = document.createElement('a');
-                resultLink.href = "/user/" + incomingResults[i]._id;
+                resultLink.href = "/user/user/" + incomingResults[i]._id;
                 resultLink.innerText = incomingResults[i].name;
                 newResult.classList.add("artistfollowers");
                 newResult.classList.add("oddlist");
@@ -105,7 +105,7 @@ searchArtists.onclick = (event)=>{
         }
     };
 
-    xhttp.open("POST", "/homepage/search/artists", true);
+    xhttp.open("POST", "/user/homepage/search/artists", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(searchBundle));
 }
@@ -133,14 +133,12 @@ searchArt.onclick = (event)=>{
             for(let i = 0; i<incomingResults.length;i++){
                 let newResult = document.createElement('li');
                 let resultLink = document.createElement('a');
-                resultLink.href = "/art/" + incomingResults[i]._id;
+                resultLink.href = "/art/art/" + incomingResults[i]._id;
                 resultLink.innerText = incomingResults[i].title;
                 resultLink.classList.add("imagelink");
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
-                image.width = 200;
-                image.height = 200;
-                
+                image.classList.add("homepageartdim");
                 newResult.onmouseover = (event) =>{
                     image.classList.add("centerimage");
                 }
@@ -198,7 +196,7 @@ searchArt.onclick = (event)=>{
         }
     };
 
-    xhttp.open("POST", "/homepage/search/art", true);
+    xhttp.open("POST", "/user/homepage/search/art", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(searchBundle));
 }
@@ -241,14 +239,12 @@ searchFilteredArt.onclick = (event)=>{
             for(let i = 0; i<incomingResults.length;i++){
                 let newResult = document.createElement('li');
                 let resultLink = document.createElement('a');
-                resultLink.href = "/art/" + incomingResults[i]._id;
+                resultLink.href = "/art/art/" + incomingResults[i]._id;
                 resultLink.innerText = incomingResults[i].title;
                 resultLink.classList.add("imagelink");
                 let image = document.createElement('img');
                 image.src = incomingResults[i].poster;
-                image.width = 200;
-                image.height = 200;
-                                
+                image.classList.add("homepageartdim");  
                 newResult.onmouseover = (event) =>{
                     image.classList.add("centerimage");
                 }
@@ -307,7 +303,7 @@ searchFilteredArt.onclick = (event)=>{
         }
     };
 
-    xhttp.open("GET", "/homepage/search/art?search="+search+"&category="+category+"&minYear="+minYear+"&maxYear="+maxYear+"&medium="+medium+"&artist="+artist, true);
+    xhttp.open("GET", "/user/homepage/search/art?search="+search+"&category="+category+"&minYear="+minYear+"&maxYear="+maxYear+"&medium="+medium+"&artist="+artist, true);
 
     xhttp.send();
 }

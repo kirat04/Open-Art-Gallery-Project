@@ -10,7 +10,7 @@ deleteNotifsButton.onclick = (event)=>{
         }
     };
 
-    xhttp.open("PUT", "/notif", true);
+    xhttp.open("PUT", "/user/notif", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send();
 }

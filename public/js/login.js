@@ -12,18 +12,18 @@ loginButton.onclick = (event)=>{
         if (this.readyState == 4 && this.status == 200) {
             alert("logged in");
             console.log(this.response);
-            window.location = '/homepage';
+            window.location = '/user/homepage';
             
         }
         if (this.readyState == 4 && this.status == 400) {
             alert("User doesn't exist");
             console.log(this.response);
-            window.location = '/homepage';
+            
             
         }
     };
 
-    xhttp.open("POST", "/login", true);
+    xhttp.open("POST", "/user/login", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(loginBundle));
 }
