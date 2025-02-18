@@ -1,7 +1,7 @@
-# Open Gallery Project
+# Open Art Gallery Project
 
 ## Overview
-The Open Gallery project is a web application designed to provide exhibition space for artists to showcase their work and connect with the community. The application maintains a database of art items and supports two types of users: patrons and artists. 
+The Open Art Gallery is a web application designed to provide exhibition space for artists to showcase their work and connect with the community. The application maintains a database of art items and supports two types of users: patrons and artists. 
 
 ## Features
 
