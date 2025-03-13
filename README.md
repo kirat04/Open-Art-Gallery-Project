@@ -56,7 +56,7 @@ The following are the minimum requirements for the Open Gallery project:
    ```sh
    cd open-gallery
    ```
-3. Install the necessary dependencies:
+3. Install the dependencies:
    ```sh
    npm install
    ```
